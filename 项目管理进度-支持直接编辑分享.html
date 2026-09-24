@@ -1,0 +1,2806 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>数通项目 · 多月进度路线图</title>
+  <style>
+    :root {
+      --navy-950: #08152f;
+      --navy-900: #0d1f42;
+      --navy-800: #18335f;
+      --blue-700: #174fbf;
+      --blue-600: #2563eb;
+      --blue-500: #3b82f6;
+      --teal-600: #0f9f8c;
+      --orange-600: #9a3f12;
+      --ink-900: #111c33;
+      --ink-700: #33415c;
+      --ink-500: #667085;
+      --line-strong: #d7deea;
+      --line-soft: #e8edf4;
+      --surface: #ffffff;
+      --surface-muted: #f7f9fc;
+      --canvas: #eef2f7;
+      --shadow-soft: 0 18px 48px rgba(13, 31, 66, 0.08);
+      --shadow-card: 0 10px 30px rgba(13, 31, 66, 0.07);
+      --radius-xl: 26px;
+      --radius-lg: 18px;
+      --radius-md: 13px;
+      --stage-width: 318px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-width: 320px;
+      background: var(--canvas);
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink-900);
+      background:
+        radial-gradient(circle at 8% 0%, rgba(37, 99, 235, 0.08), transparent 30%),
+        linear-gradient(180deg, #f7f9fc 0%, var(--canvas) 100%);
+      font-family: Inter, "SF Pro Display", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      text-rendering: optimizeLegibility;
+    }
+
+    body.editor-open {
+      overflow: hidden;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      color: inherit;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 3px solid #ffffff;
+      outline-offset: 2px;
+      box-shadow: 0 0 0 5px var(--blue-700);
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .app-shell {
+      width: min(1920px, 100%);
+      margin: 0 auto;
+      padding: clamp(22px, 3vw, 50px);
+    }
+
+    .page-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 28px;
+      margin-bottom: 24px;
+    }
+
+    .persistence-warning {
+      margin: -4px 0 24px;
+      padding: 14px 16px;
+      border: 1px solid #f1c59e;
+      border-radius: var(--radius-md);
+      color: #74310f;
+      background: #fff7ed;
+      box-shadow: 0 8px 22px rgba(122, 46, 14, 0.07);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .persistence-warning-copy {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 650;
+      line-height: 1.6;
+    }
+
+    .persistence-warning .button {
+      flex: none;
+      color: #74310f;
+      border-color: #e8b889;
+      background: #ffffff;
+    }
+
+    .eyebrow,
+    .section-kicker,
+    .editor-kicker {
+      margin: 0 0 9px;
+      color: var(--blue-700);
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .page-title {
+      max-width: 920px;
+      margin: 0;
+      color: var(--navy-950);
+      font-size: clamp(24px, 3vw, 38px);
+      font-weight: 760;
+      letter-spacing: -0.035em;
+      line-height: 1.15;
+    }
+
+    .page-subtitle {
+      max-width: 760px;
+      margin: 6px 0 0;
+      color: var(--ink-500);
+      font-size: clamp(14px, 1.35vw, 17px);
+      line-height: 1.6;
+    }
+
+    .header-actions,
+    .toolbar-actions,
+    .editor-actions,
+    .editor-footer-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      min-height: 42px;
+      padding: 0 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 11px;
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: 0 4px 12px rgba(13, 31, 66, 0.04);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 680;
+      transition: border-color 160ms ease, color 160ms ease, background 160ms ease, transform 160ms ease;
+    }
+
+    .button:hover:not(:disabled) {
+      border-color: #aebbd0;
+      color: var(--blue-700);
+      transform: translateY(-1px);
+    }
+
+    .button:disabled {
+      opacity: 0.38;
+      cursor: not-allowed;
+    }
+
+    .button svg {
+      width: 17px;
+      height: 17px;
+      flex: none;
+    }
+
+    .button-primary {
+      color: #ffffff;
+      border-color: var(--navy-900);
+      background: var(--navy-900);
+      box-shadow: 0 10px 22px rgba(13, 31, 66, 0.18);
+    }
+
+    .button-primary:hover:not(:disabled) {
+      color: #ffffff;
+      border-color: var(--blue-700);
+      background: var(--blue-700);
+    }
+
+    .button-quiet {
+      min-height: 36px;
+      padding: 0 12px;
+      box-shadow: none;
+      font-size: 13px;
+    }
+
+    .button-danger {
+      color: #b42318;
+      border-color: #f1cbc6;
+      background: #fff8f7;
+      box-shadow: none;
+    }
+
+    .roadmap-panel {
+      overflow: hidden;
+      border: 1px solid rgba(202, 211, 225, 0.9);
+      border-radius: var(--radius-xl);
+      background: rgba(255, 255, 255, 0.93);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(12px);
+    }
+
+    .roadmap-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 25px 28px 20px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .toolbar-actions {
+      flex-wrap: nowrap;
+    }
+
+    .scroll-button {
+      width: 42px;
+      padding: 0;
+    }
+
+    .roadmap-viewport {
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 24px 28px 18px;
+      scroll-behavior: smooth;
+      scroll-snap-type: x proximity;
+      scrollbar-color: #aebbd0 transparent;
+      scrollbar-width: thin;
+    }
+
+    .roadmap-viewport::-webkit-scrollbar {
+      height: 9px;
+    }
+
+    .roadmap-viewport::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .roadmap-viewport::-webkit-scrollbar-thumb {
+      border: 2px solid transparent;
+      border-radius: 999px;
+      background: #b9c5d6;
+      background-clip: padding-box;
+    }
+
+    .roadmap-track {
+      display: flex;
+      align-items: stretch;
+      gap: 18px;
+      width: max-content;
+      min-width: 100%;
+    }
+
+    .month-group {
+      display: flex;
+      flex: none;
+      flex-direction: column;
+      gap: 12px;
+      min-width: var(--stage-width);
+      scroll-snap-align: start;
+    }
+
+    .month-header {
+      position: relative;
+      overflow: hidden;
+      min-height: 58px;
+      padding: 0 20px;
+      border-radius: 15px;
+      color: #ffffff;
+      background: linear-gradient(135deg, var(--navy-950), var(--navy-800));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .month-header::after {
+      position: absolute;
+      right: -46px;
+      bottom: -70px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: rgba(74, 138, 244, 0.17);
+      content: "";
+    }
+
+    .month-title {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      font-size: 21px;
+      font-weight: 760;
+      letter-spacing: 0.01em;
+    }
+
+    .month-count {
+      position: relative;
+      z-index: 1;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .stage-row {
+      display: flex;
+      align-items: stretch;
+      gap: 12px;
+    }
+
+    .stage-card {
+      width: var(--stage-card-width, var(--stage-width));
+      min-height: 470px;
+      flex: none;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      overflow: hidden;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stage-header {
+      padding: 19px 20px 17px;
+      border-bottom: 1px solid var(--line-soft);
+      background: linear-gradient(180deg, #ffffff 0%, #fafcff 100%);
+    }
+
+    .stage-meta {
+      margin: 0 0 8px;
+      color: var(--blue-700);
+      font-size: 11px;
+      font-weight: 760;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .stage-title {
+      margin: 0;
+      color: var(--navy-950);
+      font-size: 19px;
+      font-weight: 760;
+      line-height: 1.3;
+    }
+
+    .stage-requirement-count {
+      display: inline-flex;
+      margin-top: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      color: var(--ink-700);
+      background: #edf2f8;
+      font-size: 11px;
+      font-weight: 650;
+    }
+
+    .requirement-list {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px;
+    }
+
+    .requirement-column {
+      width: calc(var(--stage-width) - 30px);
+      flex: none;
+      display: grid;
+      align-content: start;
+      gap: 11px;
+    }
+
+    .requirement-card {
+      padding: 14px 14px 13px;
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius-md);
+      background: var(--surface-muted);
+    }
+
+    .requirement-title {
+      margin: 0;
+      color: var(--ink-900);
+      font-size: 15px;
+      font-weight: 720;
+      line-height: 1.45;
+    }
+
+    .requirement-description {
+      margin: 7px 0 13px;
+      color: var(--ink-500);
+      font-size: 12.5px;
+      line-height: 1.62;
+      white-space: pre-line;
+      overflow-wrap: anywhere;
+    }
+
+    .requirement-card[data-progress-state="unreported"] .requirement-description {
+      margin-bottom: 0;
+    }
+
+    .progress-summary {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 7px;
+    }
+
+    .progress-label {
+      color: var(--blue-700);
+      font-size: 22px;
+      font-weight: 780;
+      letter-spacing: -0.035em;
+    }
+
+    .progress-caption {
+      color: var(--ink-500);
+      font-size: 11px;
+      font-weight: 630;
+    }
+
+    .progress-track {
+      overflow: hidden;
+      height: 7px;
+      border-radius: 999px;
+      background: #dde4ee;
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--blue-600), var(--blue-500));
+      transition: width 220ms ease;
+    }
+
+    .requirement-card[data-progress-state="complete"] .progress-label {
+      color: var(--teal-600);
+    }
+
+    .requirement-card[data-progress-state="complete"] .progress-fill {
+      background: var(--teal-600);
+    }
+
+    .progress-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      color: #475467;
+      background: #e9eef5;
+      font-size: 11.5px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .progress-status::before {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #7b8ba5;
+      content: '';
+    }
+
+    .empty-state {
+      width: var(--stage-width);
+      min-height: 180px;
+      padding: 28px 22px;
+      border: 1px dashed #bbc6d7;
+      border-radius: var(--radius-lg);
+      color: var(--ink-500);
+      background: rgba(247, 249, 252, 0.76);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .roadmap-hint {
+      margin: 0;
+      padding: 5px 28px 23px;
+      color: var(--ink-500);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .editor-backdrop {
+      position: fixed;
+      z-index: 100;
+      inset: 0;
+      background: rgba(8, 21, 47, 0.48);
+      backdrop-filter: blur(5px);
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .editor-drawer {
+      width: min(760px, 95vw);
+      height: 100%;
+      background: #f7f9fc;
+      box-shadow: -22px 0 60px rgba(8, 21, 47, 0.2);
+      display: flex;
+      flex-direction: column;
+      animation: drawer-in 180ms ease-out;
+    }
+
+    @keyframes drawer-in {
+      from { transform: translateX(28px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .editor-header,
+    .editor-footer {
+      flex: none;
+      padding: 19px 22px;
+      border-bottom: 1px solid var(--line-strong);
+      background: rgba(255, 255, 255, 0.96);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .editor-footer {
+      border-top: 1px solid var(--line-strong);
+      border-bottom: 0;
+    }
+
+    .editor-title {
+      margin: 0;
+      color: var(--navy-950);
+      font-size: 22px;
+    }
+
+    .icon-button {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border: 1px solid var(--line-strong);
+      border-radius: 11px;
+      background: #ffffff;
+      cursor: pointer;
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .editor-body {
+      overflow-y: auto;
+      padding: 20px 22px 28px;
+    }
+
+    .editor-lead {
+      margin: 0 0 18px;
+      color: var(--ink-500);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field-label {
+      color: var(--ink-700);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .field-input,
+    .field-textarea {
+      width: 100%;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      color: var(--ink-900);
+      background: #ffffff;
+      transition: border-color 150ms ease, box-shadow 150ms ease;
+    }
+
+    .field-input {
+      min-height: 42px;
+      padding: 0 12px;
+    }
+
+    .field-textarea {
+      min-height: 76px;
+      padding: 10px 12px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+
+    .field-input:focus,
+    .field-textarea:focus {
+      border-color: var(--blue-700);
+      outline: 2px solid #ffffff;
+      outline-offset: 0;
+      box-shadow: 0 0 0 4px var(--blue-700);
+    }
+
+    .field-input[aria-invalid="true"] {
+      border-color: #b42318;
+      box-shadow: 0 0 0 3px rgba(180, 35, 24, 0.11);
+    }
+
+    .editor-project-field {
+      margin-bottom: 19px;
+      padding: 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-md);
+      background: #ffffff;
+    }
+
+    .editor-months {
+      display: grid;
+      gap: 16px;
+    }
+
+    .editor-month,
+    .editor-stage,
+    .editor-requirement {
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-lg);
+      background: #ffffff;
+    }
+
+    .editor-month {
+      overflow: hidden;
+    }
+
+    .editor-block-header {
+      padding: 14px 15px;
+      border-bottom: 1px solid var(--line-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .editor-block-title {
+      margin: 0;
+      color: var(--navy-950);
+      font-size: 14px;
+      font-weight: 760;
+    }
+
+    .editor-month-content {
+      display: grid;
+      gap: 13px;
+      padding: 15px;
+      background: #f3f6fa;
+    }
+
+    .editor-stage {
+      overflow: hidden;
+      border-radius: var(--radius-md);
+    }
+
+    .editor-stage-content {
+      display: grid;
+      gap: 11px;
+      padding: 13px;
+    }
+
+    .editor-requirement {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 108px;
+      gap: 11px;
+      min-width: 0;
+      margin: 0;
+      padding: 12px;
+      border-radius: 11px;
+      background: var(--surface-muted);
+    }
+
+    .sr-only {
+      position: absolute;
+      overflow: hidden;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      border: 0;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+
+    .editor-requirement-main {
+      display: grid;
+      gap: 10px;
+    }
+
+    .editor-requirement-side {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .editor-insert-requirement {
+      width: 100%;
+      min-height: 32px;
+      margin-top: -5px;
+      border-style: dashed;
+      color: var(--blue-700);
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: none;
+      font-size: 12px;
+    }
+
+    .editor-empty {
+      margin: 0;
+      padding: 16px;
+      border: 1px dashed #bac6d7;
+      border-radius: 10px;
+      color: var(--ink-500);
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .editor-add-month {
+      width: 100%;
+      margin-top: 16px;
+    }
+
+    .editor-status {
+      color: var(--ink-500);
+      font-size: 12px;
+    }
+
+    .editor-status[data-kind="warning"] {
+      color: #9a3f12;
+      font-weight: 700;
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 200;
+      right: 24px;
+      bottom: 24px;
+      max-width: min(420px, calc(100vw - 48px));
+      padding: 13px 17px;
+      border: 1px solid #bdd6ca;
+      border-radius: 12px;
+      color: #0d513f;
+      background: #ecfdf5;
+      box-shadow: 0 16px 38px rgba(8, 21, 47, 0.18);
+      font-size: 13px;
+      line-height: 1.5;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px);
+      transition: opacity 160ms ease, transform 160ms ease;
+    }
+
+    .toast[data-kind="warning"] {
+      color: #7a2e0e;
+      border-color: #f4c7a6;
+      background: #fff7ed;
+    }
+
+    .toast.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 900px) {
+      :root {
+        --stage-width: min(82vw, 318px);
+      }
+
+      .app-shell {
+        padding: 22px 16px 32px;
+      }
+
+      .page-header,
+      .roadmap-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .persistence-warning {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .header-actions {
+        width: 100%;
+      }
+
+      .header-actions .button {
+        flex: 1 1 auto;
+      }
+
+      .roadmap-toolbar,
+      .roadmap-viewport {
+        padding-right: 18px;
+        padding-left: 18px;
+      }
+
+      .roadmap-hint {
+        padding-right: 18px;
+        padding-left: 18px;
+      }
+
+      .editor-drawer {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .header-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .header-actions .button-primary {
+        grid-column: 1 / -1;
+      }
+
+      .roadmap-toolbar {
+        padding-top: 19px;
+      }
+
+      .editor-header,
+      .editor-footer,
+      .editor-body {
+        padding-right: 15px;
+        padding-left: 15px;
+      }
+
+      .editor-requirement {
+        grid-template-columns: 1fr;
+      }
+
+      .editor-requirement-side {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: end;
+      }
+
+      .editor-footer {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .editor-footer-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      #saveEditorButton {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell" id="appShell">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">Project milestone roadmap</p>
+        <p class="page-subtitle">按月份汇总多个阶段，聚焦重点需求描述与截至阶段的累计总进度。</p>
+      </div>
+      <div class="header-actions" aria-label="路线图操作">
+        <button class="button button-primary" id="editButton" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4Zm11.5-13.5 2 2M13 5l4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          编辑路线图
+        </button>
+        <button class="button" id="exportButton" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 17v3h14v-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          导出备份
+        </button>
+        <button class="button" id="imageExportButton" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM7 15l3-3 3 3 2-2 3 3M8.5 9.5h.01" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          导出完整图片
+        </button>
+        <button class="button" id="importButton" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4m0 0 4 4m-4-4L8 8M5 17v3h14v-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          导入备份
+        </button>
+        <input id="importInput" type="file" accept="application/json,.json" hidden>
+      </div>
+    </header>
+
+    <div class="persistence-warning" id="persistenceWarning" role="alert" hidden>
+      <p class="persistence-warning-copy" id="persistenceWarningText"></p>
+      <button class="button button-quiet" id="persistenceExportButton" type="button">导出当前备份</button>
+    </div>
+
+    <main>
+      <section class="roadmap-panel" aria-labelledby="pageTitle">
+        <div class="roadmap-toolbar">
+          <h1 class="page-title" id="pageTitle">数通项目多月进度路线图</h1>
+          <div class="toolbar-actions" aria-label="横向浏览路线图">
+            <button class="button scroll-button" id="scrollLeftButton" type="button" aria-label="查看前面的阶段">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="button scroll-button" id="scrollRightButton" type="button" aria-label="查看后面的阶段">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="roadmap-viewport" id="roadmapViewport" tabindex="0" aria-label="可横向滚动的多月进度路线图">
+          <div class="roadmap-track" id="roadmapTrack"></div>
+        </div>
+        <p class="roadmap-hint">左右滑动或使用箭头浏览更多月份与阶段</p>
+      </section>
+    </main>
+  </div>
+
+  <div class="editor-backdrop" id="editorBackdrop" hidden>
+    <aside class="editor-drawer" id="editorDrawer" role="dialog" aria-modal="true" aria-labelledby="editorTitle" tabindex="-1">
+      <header class="editor-header">
+        <div>
+          <p class="editor-kicker">Live preview</p>
+          <h2 class="editor-title" id="editorTitle">编辑多月路线图</h2>
+        </div>
+        <button class="icon-button" id="closeEditorButton" type="button" aria-label="关闭编辑器">×</button>
+      </header>
+      <div class="editor-body">
+        <p class="editor-lead">输入时会实时更新路线图预览；窄屏下保存或取消后可返回查看全图。只有点击“保存更新”后才会覆盖本机保存的数据。进度留空时不显示进度区，填写 0 时显示“未开始”。</p>
+        <div class="editor-project-field">
+          <label class="field">
+            <span class="field-label">页面标题</span>
+            <input class="field-input" id="projectTitleInput" type="text" maxlength="80" autocomplete="off">
+          </label>
+        </div>
+        <div class="editor-months" id="editorMonths"></div>
+        <button class="button editor-add-month" id="addMonthButton" type="button">＋ 新增月份</button>
+      </div>
+      <footer class="editor-footer">
+        <span class="editor-status" id="editorStatus" role="status" aria-live="polite">尚未修改</span>
+        <div class="editor-footer-actions">
+          <button class="button" id="exportDraftButton" type="button">导出当前草稿</button>
+          <button class="button" id="cancelEditorButton" type="button">取消</button>
+          <button class="button button-primary" id="saveEditorButton" type="button">保存更新</button>
+        </div>
+      </footer>
+    </aside>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script data-roadmap-core>
+    (function initializeRoadmapCore(globalObject) {
+      'use strict';
+
+      const LEGACY_STORAGE_KEY = 'shutong-milestone-roadmap-v1';
+
+      function storageKeyForPath(pathname) {
+        const documentPath = typeof pathname === 'string' && pathname.trim()
+          ? pathname.trim()
+          : 'standalone';
+        return `${LEGACY_STORAGE_KEY}:document:${documentPath}`;
+      }
+
+      const STORAGE_KEY = storageKeyForPath(
+        globalObject.location && typeof globalObject.location.pathname === 'string'
+          ? globalObject.location.pathname
+          : ''
+      );
+      const LIMITS = Object.freeze({
+        projectTitle: 80,
+        monthLabel: 30,
+        stageLabel: 40,
+        requirementTitle: 80,
+        requirementDescription: 300,
+        id: 120,
+        months: 36,
+        stagesPerMonth: 24,
+        requirementsPerStage: 200,
+        importBytes: 5 * 1024 * 1024
+      });
+      let idCounter = 0;
+
+      const DEFAULT_DATA = {
+        version: 1,
+        projectTitle: '数通项目多月进度路线图',
+        months: [
+          {
+            id: 'month-07',
+            label: '7月',
+            stages: [
+              {
+                id: 'stage-0716-0731',
+                label: '07.16–07.31',
+                requirements: [
+                  {
+                    id: 'dashboard-foundation',
+                    title: '业务指标监控看板',
+                    description: '需协调采购员、开发+数仓统一规范，整体排期至9月30日',
+                    progress: null
+                  },
+                  {
+                    id: 'platform-five',
+                    title: '5平台订单与报告解析',
+                    description: 'CD / eBay / 美客多 / Shopee / Lazada 统一接口，对接 OMS',
+                    progress: 100
+                  },
+                  {
+                    id: 'amazon-vc',
+                    title: 'Amazon VC订单数据聚合',
+                    description: 'Amazon VC订单：PO / DF / CoOp / Payments 全模块数据汇总加工',
+                    progress: 100
+                  },
+                  {
+                    id: 'amazon-finance-withdrawal',
+                    title: 'Amazon 财务对账',
+                    description: 'Amazon平台：提现记录（余额明细）',
+                    progress: 100
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            id: 'month-08',
+            label: '8月',
+            stages: [
+              {
+                id: 'stage-0801-0815',
+                label: '08.01–08.15',
+                requirements: [
+                  {
+                    id: 'dashboard-sales-release',
+                    title: '业务指标监控看板（销售）',
+                    description: '销售业绩可视化看板：实时监控 / 多维分析 / 目标追踪 / 退款预警 / 数据导出',
+                    progress: 100
+                  },
+                  {
+                    id: 'platform-three',
+                    title: '3平台订单与报告解析',
+                    description: 'AliExpress / Ozon / Allegro 平台统一接口，对接 OMS',
+                    progress: 100
+                  },
+                  {
+                    id: 'shipping-fees',
+                    title: '发运单费用项目',
+                    description: '墨西哥仓库内针对备货单会涉及入库费、出库费、退件、仓租等费用',
+                    progress: 100
+                  },
+                  {
+                    id: 'finance-k3',
+                    title: '财务对账',
+                    description: 'Amazon平台：Summary K3 对接',
+                    progress: 100
+                  }
+                ]
+              },
+              {
+                id: 'stage-0816-0831',
+                label: '08.16–08.31',
+                requirements: [
+                  {
+                    id: 'dashboard-sales-acceptance',
+                    title: '业务指标监控看板（销售）',
+                    description: '配合验收，优化新增维度：ASIN 和父 ASIN',
+                    progress: null
+                  },
+                  {
+                    id: 'platform-two',
+                    title: '2平台订单与报告解析',
+                    description: 'Coupang / ManoMano 平台 OMS 接口统一对接',
+                    progress: 60
+                  },
+                  {
+                    id: 'sales-detail-report',
+                    title: '销售明细报告开发',
+                    description: 'Walmart MX / CA 仓储费、广告报告完整开发上线',
+                    progress: 50
+                  },
+                  {
+                    id: 'advertising-report',
+                    title: '广告管理',
+                    description: 'TikTok 广告报告完整开发上线',
+                    progress: 30
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            id: 'month-09',
+            label: '9月',
+            stages: [
+              {
+                id: 'stage-0901-0915',
+                label: '09.01–09.15',
+                requirements: [
+                  {
+                    id: 'dashboard-development',
+                    title: '业务指标监控看板（开发）',
+                    description: '持续配合数仓规范落地，整体交付9月30日',
+                    progress: null
+                  },
+                  {
+                    id: 'platform-eleven',
+                    title: '11平台订单与报告解析',
+                    description: 'Wildberries / Kaufman / LeroyMerlin / Joom / 乐天 / Yandex / TD / Bol / Fruugo / Fyn / Jumia 平台 OMS 接口统一对接',
+                    progress: null
+                  },
+                  {
+                    id: 'combined-sku',
+                    title: '父子大小件组合SKU',
+                    description: '父子大小件组合 SKU 对接',
+                    progress: null
+                  }
+                ]
+              },
+              {
+                id: 'stage-0916-0930',
+                label: '09.16–09.30',
+                requirements: [
+                  {
+                    id: 'dashboard-final-delivery',
+                    title: '业务指标监控看板最终交付',
+                    description: '完成全部数据规范、页面开发、联调验收，9月30日上线',
+                    progress: null
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      };
+
+      function cloneRoadmap(value) {
+        return JSON.parse(JSON.stringify(value));
+      }
+
+      function createId(prefix) {
+        idCounter += 1;
+        return `${prefix}-${Date.now().toString(36)}-${idCounter.toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+      }
+
+      function textValue(value, fallback, maxLength, label = '文本') {
+        if (typeof value !== 'string') {
+          return fallback;
+        }
+        const trimmed = value.trim();
+        const result = trimmed || fallback;
+        if (maxLength && result.length > maxLength) {
+          throw new Error(`${label}不能超过 ${maxLength} 个字符`);
+        }
+        return result;
+      }
+
+      function normalizeProgress(value) {
+        if (value === null || value === undefined) {
+          return null;
+        }
+        if (typeof value !== 'number' && typeof value !== 'string') {
+          return null;
+        }
+        const prepared = typeof value === 'string' ? value.trim() : value;
+        if (prepared === '') {
+          return null;
+        }
+        const number = Number(prepared);
+        if (!Number.isFinite(number)) {
+          return null;
+        }
+        return Math.min(100, Math.max(0, Math.round(number)));
+      }
+
+      function uniqueId(value, prefix, seen, label) {
+        const supplied = textValue(value, '', LIMITS.id, `${label} ID`);
+        if (supplied && seen.has(supplied)) {
+          throw new Error(`${label} ID 重复：${supplied}`);
+        }
+        let id = supplied || createId(prefix);
+        while (seen.has(id)) {
+          id = createId(prefix);
+        }
+        seen.add(id);
+        return id;
+      }
+
+      function importedProgress(value) {
+        if (value === null || value === undefined) {
+          return null;
+        }
+        if (typeof value !== 'number' || !Number.isInteger(value) || value < 0 || value > 100) {
+          throw new Error('需求进度必须是 0 到 100 的整数或 null');
+        }
+        return value;
+      }
+
+      function normalizeRequirement(requirement, index, requirementIds) {
+        const input = requirement && typeof requirement === 'object' ? requirement : {};
+        return {
+          id: uniqueId(input.id, `requirement-${index + 1}`, requirementIds, '需求'),
+          title: textValue(input.title, '未命名需求', LIMITS.requirementTitle, '需求名称'),
+          description: textValue(
+            input.description,
+            '暂无需求描述',
+            LIMITS.requirementDescription,
+            '需求描述'
+          ),
+          progress: importedProgress(input.progress)
+        };
+      }
+
+      function normalizeStage(stage, index, stageIds) {
+        const input = stage && typeof stage === 'object' ? stage : {};
+        const requirements = Array.isArray(input.requirements) ? input.requirements : [];
+        if (requirements.length > LIMITS.requirementsPerStage) {
+          throw new Error(`每个阶段的需求数量不能超过 ${LIMITS.requirementsPerStage} 条`);
+        }
+        const requirementIds = new Set();
+        return {
+          id: uniqueId(input.id, `stage-${index + 1}`, stageIds, '阶段'),
+          label: textValue(input.label, '新阶段', LIMITS.stageLabel, '阶段名称'),
+          requirements: requirements.map((requirement, requirementIndex) => (
+            normalizeRequirement(requirement, requirementIndex, requirementIds)
+          ))
+        };
+      }
+
+      function normalizeMonth(month, index, monthIds, stageIds) {
+        const input = month && typeof month === 'object' ? month : {};
+        const stages = Array.isArray(input.stages) ? input.stages : [];
+        if (stages.length > LIMITS.stagesPerMonth) {
+          throw new Error(`每个月份的阶段数量不能超过 ${LIMITS.stagesPerMonth} 个`);
+        }
+        return {
+          id: uniqueId(input.id, `month-${index + 1}`, monthIds, '月份'),
+          label: textValue(input.label, '新月份', LIMITS.monthLabel, '月份名称'),
+          stages: stages.map((stage, stageIndex) => normalizeStage(stage, stageIndex, stageIds))
+        };
+      }
+
+      function normalizeRoadmapData(candidate) {
+        if (!candidate || typeof candidate !== 'object' || Array.isArray(candidate)) {
+          throw new Error('路线图数据必须是对象');
+        }
+        if (candidate.version !== 1) {
+          throw new Error('不支持的数据版本');
+        }
+        const months = Array.isArray(candidate.months) ? candidate.months : [];
+        if (months.length > LIMITS.months) {
+          throw new Error(`月份数量不能超过 ${LIMITS.months} 个`);
+        }
+        const monthIds = new Set();
+        const stageIds = new Set();
+        return {
+          version: 1,
+          projectTitle: textValue(
+            candidate.projectTitle,
+            '数通项目多月进度路线图',
+            LIMITS.projectTitle,
+            '页面标题'
+          ),
+          months: months.map((month, monthIndex) => normalizeMonth(month, monthIndex, monthIds, stageIds))
+        };
+      }
+
+      function createBlankRequirement() {
+        return {
+          id: createId('requirement'),
+          title: '新需求',
+          description: '请输入需求描述',
+          progress: null
+        };
+      }
+
+      function createBlankStage(label) {
+        return {
+          id: createId('stage'),
+          label: textValue(label, '新阶段'),
+          requirements: []
+        };
+      }
+
+      function createBlankMonth(existingMonths, label) {
+        return {
+          id: createId('month'),
+          label: textValue(label, '新月份'),
+          stages: [createBlankStage('新阶段')]
+        };
+      }
+
+      function addMonth(data, label) {
+        const next = cloneRoadmap(normalizeRoadmapData(data));
+        next.months.push(createBlankMonth(next.months, label));
+        return normalizeRoadmapData(next);
+      }
+
+      function removeMonth(data, monthId) {
+        const next = cloneRoadmap(normalizeRoadmapData(data));
+        next.months = next.months.filter(month => month.id !== monthId);
+        return normalizeRoadmapData(next);
+      }
+
+      function addStage(data, monthId) {
+        const next = cloneRoadmap(normalizeRoadmapData(data));
+        const month = next.months.find(item => item.id === monthId);
+        if (!month) {
+          throw new Error('未找到月份');
+        }
+        month.stages.push(createBlankStage('新阶段'));
+        return normalizeRoadmapData(next);
+      }
+
+      function copyStage(data, monthId, stageId) {
+        const next = cloneRoadmap(normalizeRoadmapData(data));
+        const month = next.months.find(item => item.id === monthId);
+        if (!month) {
+          throw new Error('未找到月份');
+        }
+        const index = month.stages.findIndex(stage => stage.id === stageId);
+        if (index < 0) {
+          throw new Error('未找到阶段');
+        }
+        const source = month.stages[index];
+        const copied = cloneRoadmap(source);
+        const copySuffix = ' 副本';
+        copied.id = createId('stage');
+        copied.label = `${source.label.slice(0, LIMITS.stageLabel - copySuffix.length).trimEnd()}${copySuffix}`;
+        month.stages.splice(index + 1, 0, copied);
+        return normalizeRoadmapData(next);
+      }
+
+      function removeStage(data, monthId, stageId) {
+        const next = cloneRoadmap(normalizeRoadmapData(data));
+        const month = next.months.find(item => item.id === monthId);
+        if (!month) {
+          throw new Error('未找到月份');
+        }
+        month.stages = month.stages.filter(stage => stage.id !== stageId);
+        return normalizeRoadmapData(next);
+      }
+
+      function insertRequirement(data, stageId, insertIndex) {
+        const next = cloneRoadmap(normalizeRoadmapData(data));
+        for (const month of next.months) {
+          const stage = month.stages.find(item => item.id === stageId);
+          if (stage) {
+            const requestedIndex = Number.isInteger(insertIndex)
+              ? insertIndex
+              : stage.requirements.length;
+            const safeIndex = Math.min(stage.requirements.length, Math.max(0, requestedIndex));
+            stage.requirements.splice(safeIndex, 0, createBlankRequirement());
+            return normalizeRoadmapData(next);
+          }
+        }
+        throw new Error('未找到阶段');
+      }
+
+      function addRequirement(data, stageId) {
+        return insertRequirement(data, stageId);
+      }
+
+      function removeRequirement(data, stageId, requirementId) {
+        const next = cloneRoadmap(normalizeRoadmapData(data));
+        for (const month of next.months) {
+          const stage = month.stages.find(item => item.id === stageId);
+          if (stage) {
+            stage.requirements = stage.requirements.filter(item => item.id !== requirementId);
+            return normalizeRoadmapData(next);
+          }
+        }
+        throw new Error('未找到阶段');
+      }
+
+      function loadRoadmap(storage) {
+        const fallback = () => cloneRoadmap(DEFAULT_DATA);
+        if (!storage || typeof storage.getItem !== 'function') {
+          return {
+            data: fallback(),
+            status: 'unavailable',
+            message: '浏览器存储不可用，当前使用内置路线图。'
+          };
+        }
+        try {
+          const scopedRaw = storage.getItem(STORAGE_KEY);
+          if (scopedRaw) {
+            return {
+              data: normalizeRoadmapData(JSON.parse(scopedRaw)),
+              status: 'loaded',
+              message: ''
+            };
+          }
+
+          const legacyRaw = storage.getItem(LEGACY_STORAGE_KEY);
+          if (!legacyRaw) {
+            return { data: fallback(), status: 'empty', message: '' };
+          }
+
+          const migratedData = normalizeRoadmapData(JSON.parse(legacyRaw));
+          try {
+            storage.setItem(STORAGE_KEY, JSON.stringify(migratedData));
+          } catch (error) {
+            return {
+              data: migratedData,
+              status: 'migration-pending',
+              message: '已读取旧版共享数据，但无法建立当前文件的独立存储。请先导出备份。'
+            };
+          }
+          return { data: migratedData, status: 'migrated', message: '' };
+        } catch (error) {
+          return {
+            data: fallback(),
+            status: 'recovered',
+            message: '本机保存的数据无法读取，已恢复为内置路线图。'
+          };
+        }
+      }
+
+      function saveRoadmap(storage, data) {
+        const normalized = normalizeRoadmapData(data);
+        if (!storage || typeof storage.setItem !== 'function') {
+          throw new Error('浏览器存储不可用');
+        }
+        storage.setItem(STORAGE_KEY, JSON.stringify(normalized));
+        return cloneRoadmap(normalized);
+      }
+
+      function progressPresentation(progress) {
+        const normalized = normalizeProgress(progress);
+        if (normalized === null) {
+          return { label: '', value: null, state: 'unreported' };
+        }
+        if (normalized === 0) {
+          return { label: '未开始', value: 0, state: 'not-started' };
+        }
+        if (normalized === 100) {
+          return { label: '100%', value: 100, state: 'complete' };
+        }
+        return { label: `${normalized}%`, value: normalized, state: 'active' };
+      }
+
+      globalObject.MilestoneRoadmapCore = {
+        STORAGE_KEY,
+        LEGACY_STORAGE_KEY,
+        LIMITS,
+        DEFAULT_DATA,
+        cloneRoadmap,
+        normalizeProgress,
+        normalizeRoadmapData,
+        createBlankMonth,
+        addMonth,
+        removeMonth,
+        addStage,
+        copyStage,
+        removeStage,
+        insertRequirement,
+        addRequirement,
+        removeRequirement,
+        storageKeyForPath,
+        loadRoadmap,
+        saveRoadmap,
+        progressPresentation
+      };
+    }(globalThis));
+  </script>
+
+  <script data-roadmap-app>
+    (function initializeRoadmapApp() {
+      'use strict';
+
+      if (typeof document === 'undefined') {
+        return;
+      }
+
+      const core = globalThis.MilestoneRoadmapCore;
+      const REQUIREMENTS_PER_COLUMN = 4;
+      let savedData;
+      let draftData = null;
+      let editorDirty = false;
+      let persistencePending = false;
+      let persistenceWarningMessage = '';
+      let editorPersistenceSnapshot = { pending: false, message: '' };
+      let previousFocus = null;
+      let toastTimer = null;
+
+      const elements = {};
+
+      function element(tag, className, text) {
+        const node = document.createElement(tag);
+        if (className) {
+          node.className = className;
+        }
+        if (text !== undefined) {
+          node.textContent = text;
+        }
+        return node;
+      }
+
+      function displayText(value, fallback) {
+        return typeof value === 'string' && value.trim() ? value.trim() : fallback;
+      }
+
+      function showToast(message, kind = 'success') {
+        window.clearTimeout(toastTimer);
+        elements.toast.textContent = message;
+        elements.toast.dataset.kind = kind;
+        elements.toast.classList.add('is-visible');
+        toastTimer = window.setTimeout(() => {
+          elements.toast.classList.remove('is-visible');
+        }, 3600);
+      }
+
+      function setEditorStatus(message, kind = '') {
+        elements.editorStatus.textContent = message;
+        if (kind) {
+          elements.editorStatus.dataset.kind = kind;
+        } else {
+          delete elements.editorStatus.dataset.kind;
+        }
+      }
+
+      function editorProgressIsValid() {
+        const invalidInput = elements.editorDrawer.querySelector('[aria-invalid="true"]');
+        if (!invalidInput) return true;
+        setEditorStatus('请先修正标记为错误的累计进度。', 'warning');
+        invalidInput.focus();
+        if (typeof invalidInput.reportValidity === 'function') {
+          invalidInput.reportValidity();
+        }
+        return false;
+      }
+
+      function setPersistenceWarning(message = '', pending = false) {
+        persistenceWarningMessage = message;
+        persistencePending = Boolean(pending);
+        elements.persistenceWarningText.textContent = message;
+        elements.persistenceWarning.hidden = !message;
+      }
+
+      function isEditorOpen() {
+        return !elements.editorBackdrop.hidden;
+      }
+
+      function browserStorage() {
+        try {
+          return window.localStorage;
+        } catch (error) {
+          return null;
+        }
+      }
+
+      function splitRequirementColumns(requirements) {
+        const columns = [];
+        for (let index = 0; index < requirements.length; index += REQUIREMENTS_PER_COLUMN) {
+          columns.push(requirements.slice(index, index + REQUIREMENTS_PER_COLUMN));
+        }
+        return columns;
+      }
+
+      function stageWidthForColumns(columnCount) {
+        const safeCount = Math.max(1, columnCount);
+        if (safeCount === 1) return 'var(--stage-width)';
+        const widths = Array.from({ length: safeCount }, () => 'var(--stage-width)').join(' + ');
+        return `calc(${widths} - ${(safeCount - 1) * 18}px)`;
+      }
+
+      function requirementCard(requirement) {
+        const card = element('article', 'requirement-card');
+        const presentation = core.progressPresentation(requirement.progress);
+        card.dataset.progressState = presentation.state;
+
+        card.append(
+          element('h4', 'requirement-title', displayText(requirement.title, '未命名需求')),
+          element('p', 'requirement-description', displayText(requirement.description, '暂无需求描述'))
+        );
+
+        if (presentation.state === 'unreported') {
+          return card;
+        }
+
+        if (presentation.state === 'not-started') {
+          const status = element('span', 'progress-status', presentation.label);
+          status.setAttribute(
+            'aria-label',
+            `${displayText(requirement.title, '需求')}累计总进度：${presentation.label}`
+          );
+          card.append(status);
+          return card;
+        }
+
+        const summary = element('div', 'progress-summary');
+        summary.append(
+          element('span', 'progress-label', presentation.label),
+          element('span', 'progress-caption', '累计总进度')
+        );
+
+        const track = element('div', 'progress-track');
+        track.setAttribute('role', 'progressbar');
+        track.setAttribute('aria-label', `${displayText(requirement.title, '需求')}累计总进度`);
+        track.setAttribute('aria-valuemin', '0');
+        track.setAttribute('aria-valuemax', '100');
+        track.setAttribute('aria-valuetext', presentation.label);
+        track.setAttribute('aria-valuenow', String(presentation.value));
+        const fill = element('div', 'progress-fill');
+        fill.style.width = `${presentation.value}%`;
+        track.append(fill);
+
+        card.append(summary, track);
+        return card;
+      }
+
+      function stageCard(stage, stageIndex, monthLabel) {
+        const card = element('article', 'stage-card');
+        const requirementColumns = splitRequirementColumns(stage.requirements);
+        card.style.setProperty('--stage-card-width', stageWidthForColumns(requirementColumns.length));
+        const header = element('header', 'stage-header');
+        header.append(
+          element(
+            'p',
+            'stage-meta',
+            `${displayText(monthLabel, '新月份')} · Stage ${String(stageIndex + 1).padStart(2, '0')}`
+          ),
+          element('h3', 'stage-title', displayText(stage.label, '新阶段')),
+          element('span', 'stage-requirement-count', `${stage.requirements.length} 项重点需求`)
+        );
+        card.append(header);
+
+        if (!stage.requirements.length) {
+          card.append(element('div', 'empty-state', '这个阶段还没有重点需求，可在编辑器中新增。'));
+          return card;
+        }
+
+        const list = element('div', 'requirement-list');
+        requirementColumns.forEach(requirements => {
+          const column = element('div', 'requirement-column');
+          requirements.forEach(requirement => column.append(requirementCard(requirement)));
+          list.append(column);
+        });
+        card.append(list);
+        return card;
+      }
+
+      function renderRoadmap(data) {
+        elements.pageTitle.textContent = displayText(data.projectTitle, '数通项目多月进度路线图');
+        document.title = `${displayText(data.projectTitle, '数通项目')} · 多月进度路线图`;
+        elements.roadmapTrack.replaceChildren();
+
+        if (!data.months.length) {
+          elements.roadmapTrack.append(element('div', 'empty-state', '暂无月份与阶段，点击“编辑路线图”开始添加。'));
+          updateScrollButtons();
+          return;
+        }
+
+        let globalStageIndex = 0;
+        data.months.forEach(month => {
+          const group = element('section', 'month-group');
+          group.setAttribute('aria-label', displayText(month.label, '新月份'));
+
+          const header = element('header', 'month-header');
+          header.append(
+            element('h2', 'month-title', displayText(month.label, '新月份')),
+            element('span', 'month-count', `${month.stages.length} 个阶段`)
+          );
+
+          const row = element('div', 'stage-row');
+          if (!month.stages.length) {
+            row.append(element('div', 'empty-state', '本月暂无阶段，可在编辑器中新增。'));
+          } else {
+            month.stages.forEach(stage => {
+              row.append(stageCard(stage, globalStageIndex, month.label));
+              globalStageIndex += 1;
+            });
+          }
+
+          group.append(header, row);
+          elements.roadmapTrack.append(group);
+        });
+
+        window.requestAnimationFrame(updateScrollButtons);
+      }
+
+      function updateScrollButtons() {
+        const viewport = elements.roadmapViewport;
+        const maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+        elements.scrollLeftButton.disabled = viewport.scrollLeft <= 2;
+        elements.scrollRightButton.disabled = viewport.scrollLeft >= maxScroll - 2;
+      }
+
+      function scrollRoadmap(direction) {
+        const firstColumn = elements.roadmapTrack.querySelector('.requirement-column');
+        const firstCard = elements.roadmapTrack.querySelector('.stage-card');
+        const measuredColumnWidth = firstColumn && typeof firstColumn.getBoundingClientRect === 'function'
+          ? firstColumn.getBoundingClientRect().width
+          : 0;
+        const measuredCardWidth = firstCard && typeof firstCard.getBoundingClientRect === 'function'
+          ? firstCard.getBoundingClientRect().width
+          : 0;
+        const amount = measuredColumnWidth > 0
+          ? measuredColumnWidth + 40
+          : measuredCardWidth > 0
+            ? measuredCardWidth + 12
+          : Math.max(elements.roadmapViewport.clientWidth * 0.75, 340);
+        elements.roadmapViewport.scrollBy({ left: amount * direction, behavior: 'smooth' });
+      }
+
+      function editorButton(label, action, className = 'button button-quiet') {
+        const button = element('button', className, label);
+        button.type = 'button';
+        button.dataset.action = action;
+        return button;
+      }
+
+      function labeledInput(label, value, dataset, options = {}) {
+        const wrapper = element('label', 'field');
+        wrapper.append(element('span', 'field-label', label));
+        const input = options.textarea
+          ? element('textarea', 'field-textarea')
+          : element('input', 'field-input');
+        if (!options.textarea) {
+          input.type = options.type || 'text';
+        }
+        input.value = value === null || value === undefined ? '' : String(value);
+        if (options.placeholder) input.placeholder = options.placeholder;
+        if (options.min !== undefined) input.min = String(options.min);
+        if (options.max !== undefined) input.max = String(options.max);
+        if (options.step !== undefined) input.step = String(options.step);
+        if (options.maxLength !== undefined) input.maxLength = options.maxLength;
+        if (options.ariaLabel) input.setAttribute('aria-label', options.ariaLabel);
+        Object.entries(dataset).forEach(([key, entry]) => {
+          input.dataset[key] = entry;
+        });
+        wrapper.append(input);
+        return wrapper;
+      }
+
+      function renderEditor() {
+        elements.editorMonths.replaceChildren();
+        elements.projectTitleInput.value = draftData.projectTitle || '';
+
+        if (!draftData.months.length) {
+          elements.editorMonths.append(element('p', 'editor-empty', '尚未添加月份。'));
+        }
+
+        draftData.months.forEach((month, monthIndex) => {
+          const monthContext = `${month.label} 月份 ${monthIndex + 1}`;
+          const monthBlock = element('article', 'editor-month');
+          const monthHeader = element('header', 'editor-block-header');
+          monthHeader.append(
+            element('h3', 'editor-block-title', `月份 ${monthIndex + 1}`)
+          );
+          const monthActions = element('div', 'editor-actions');
+          const addStageButton = editorButton('＋ 阶段', 'add-stage');
+          addStageButton.dataset.monthId = month.id;
+          addStageButton.setAttribute('aria-label', `${monthContext} 新增阶段`);
+          const deleteMonthButton = editorButton('删除月份', 'delete-month', 'button button-quiet button-danger');
+          deleteMonthButton.dataset.monthId = month.id;
+          deleteMonthButton.setAttribute('aria-label', `删除 ${monthContext}`);
+          monthActions.append(addStageButton, deleteMonthButton);
+          monthHeader.append(monthActions);
+
+          const monthContent = element('div', 'editor-month-content');
+          monthContent.append(labeledInput('月份名称', month.label, {
+            entity: 'month', monthId: month.id, field: 'label'
+          }, { maxLength: 30, ariaLabel: `${monthContext} 月份名称` }));
+
+          if (!month.stages.length) {
+            monthContent.append(element('p', 'editor-empty', '本月暂无阶段。'));
+          }
+
+          month.stages.forEach((stage, stageIndex) => {
+            const stageContext = `${monthContext} ${stage.label} 阶段 ${stageIndex + 1}`;
+            const stageBlock = element('section', 'editor-stage');
+            const stageHeader = element('header', 'editor-block-header');
+            stageHeader.append(element('h4', 'editor-block-title', `阶段 ${stageIndex + 1}`));
+            const stageActions = element('div', 'editor-actions');
+            const copyButton = editorButton('复制', 'copy-stage');
+            copyButton.dataset.monthId = month.id;
+            copyButton.dataset.stageId = stage.id;
+            copyButton.setAttribute('aria-label', `${stageContext} 复制`);
+            const deleteButton = editorButton('删除', 'delete-stage', 'button button-quiet button-danger');
+            deleteButton.dataset.monthId = month.id;
+            deleteButton.dataset.stageId = stage.id;
+            deleteButton.setAttribute('aria-label', `${stageContext} 删除`);
+            stageActions.append(copyButton, deleteButton);
+            stageHeader.append(stageActions);
+
+            const stageContent = element('div', 'editor-stage-content');
+            stageContent.append(labeledInput('阶段日期 / 名称', stage.label, {
+              entity: 'stage', stageId: stage.id, field: 'label'
+            }, {
+              maxLength: 40,
+              ariaLabel: `${stageContext} 阶段日期或名称`
+            }));
+
+            if (!stage.requirements.length) {
+              stageContent.append(element('p', 'editor-empty', '当前阶段暂无重点需求。'));
+            }
+
+            stage.requirements.forEach((requirement, requirementIndex) => {
+              const requirementBlock = element('fieldset', 'editor-requirement');
+              requirementBlock.append(element(
+                'legend',
+                'sr-only',
+                `${stageContext} 需求 ${requirementIndex + 1}`
+              ));
+              const main = element('div', 'editor-requirement-main');
+              main.append(
+                labeledInput(`需求 ${requirementIndex + 1} 名称`, requirement.title, {
+                  entity: 'requirement', stageId: stage.id, requirementId: requirement.id, field: 'title'
+                }, {
+                  maxLength: 80,
+                  ariaLabel: `${stageContext} 需求 ${requirementIndex + 1} 名称`
+                }),
+                labeledInput('需求描述', requirement.description, {
+                  entity: 'requirement', stageId: stage.id, requirementId: requirement.id, field: 'description'
+                }, {
+                  textarea: true,
+                  maxLength: 300,
+                  ariaLabel: `${stageContext} 需求 ${requirementIndex + 1} 描述`
+                })
+              );
+              const side = element('div', 'editor-requirement-side');
+              side.append(labeledInput('累计进度', requirement.progress, {
+                entity: 'requirement', stageId: stage.id, requirementId: requirement.id, field: 'progress'
+              }, {
+                type: 'number',
+                min: 0,
+                max: 100,
+                step: 1,
+                placeholder: '待填写',
+                ariaLabel: `${stageContext} 需求 ${requirementIndex + 1} 累计进度`
+              }));
+              const removeButton = editorButton('删除需求', 'delete-requirement', 'button button-quiet button-danger');
+              removeButton.dataset.stageId = stage.id;
+              removeButton.dataset.requirementId = requirement.id;
+              removeButton.setAttribute(
+                'aria-label',
+                `${stageContext} 需求 ${requirementIndex + 1} 删除`
+              );
+              side.append(removeButton);
+              requirementBlock.append(main, side);
+              const insertRequirementButton = editorButton(
+                '＋ 在此需求后插入',
+                'insert-requirement',
+                'button button-quiet editor-insert-requirement'
+              );
+              insertRequirementButton.dataset.stageId = stage.id;
+              insertRequirementButton.dataset.insertIndex = String(requirementIndex + 1);
+              insertRequirementButton.setAttribute(
+                'aria-label',
+                `${stageContext} 需求 ${requirementIndex + 1} 之后插入新需求`
+              );
+              stageContent.append(requirementBlock, insertRequirementButton);
+            });
+
+            const addRequirementButton = editorButton('＋ 新增到末尾', 'add-requirement');
+            addRequirementButton.dataset.stageId = stage.id;
+            addRequirementButton.setAttribute('aria-label', `${stageContext} 新增重点需求`);
+            stageContent.append(addRequirementButton);
+            stageBlock.append(stageHeader, stageContent);
+            monthContent.append(stageBlock);
+          });
+
+          monthBlock.append(monthHeader, monthContent);
+          elements.editorMonths.append(monthBlock);
+        });
+      }
+
+      function findStage(stageId) {
+        for (const month of draftData.months) {
+          const stage = month.stages.find(item => item.id === stageId);
+          if (stage) return stage;
+        }
+        return null;
+      }
+
+      function markDirty() {
+        editorDirty = true;
+        setEditorStatus('有未保存的修改');
+        renderRoadmap(draftData);
+      }
+
+      function handleEditorInput(event) {
+        const input = event.target;
+        const entity = input.dataset.entity;
+        if (!entity || !draftData) return;
+
+        if (entity === 'month') {
+          const month = draftData.months.find(item => item.id === input.dataset.monthId);
+          if (month) month[input.dataset.field] = input.value;
+        }
+
+        if (entity === 'stage') {
+          const stage = findStage(input.dataset.stageId);
+          if (stage) stage[input.dataset.field] = input.value;
+        }
+
+        if (entity === 'requirement') {
+          const stage = findStage(input.dataset.stageId);
+          const requirement = stage && stage.requirements.find(item => item.id === input.dataset.requirementId);
+          if (requirement) {
+            if (input.dataset.field === 'progress') {
+              const rawProgress = input.value.trim();
+              const progress = rawProgress === '' ? null : Number(rawProgress);
+              const valid = progress === null
+                || (Number.isInteger(progress) && progress >= 0 && progress <= 100);
+              if (!valid) {
+                input.setAttribute('aria-invalid', 'true');
+                input.setAttribute('aria-describedby', 'editorStatus');
+                if (typeof input.setCustomValidity === 'function') {
+                  input.setCustomValidity('请输入 0 到 100 的整数，或留空。');
+                }
+                editorDirty = true;
+                setEditorStatus('累计进度必须是 0 到 100 的整数，或留空表示待填写。', 'warning');
+                return;
+              }
+              input.removeAttribute('aria-invalid');
+              input.removeAttribute('aria-describedby');
+              if (typeof input.setCustomValidity === 'function') {
+                input.setCustomValidity('');
+              }
+              requirement.progress = progress;
+            } else {
+              requirement[input.dataset.field] = input.value;
+            }
+          }
+        }
+
+        markDirty();
+      }
+
+      function handleEditorAction(event) {
+        const button = event.target.closest('button[data-action]');
+        if (!button || !draftData) return;
+        if (!editorProgressIsValid()) return;
+        let focusRequest = null;
+
+        try {
+          switch (button.dataset.action) {
+            case 'add-stage': {
+              draftData = core.addStage(draftData, button.dataset.monthId);
+              const month = draftData.months.find(item => item.id === button.dataset.monthId);
+              const addedStage = month && month.stages[month.stages.length - 1];
+              if (addedStage) {
+                focusRequest = { entity: 'stage', stageId: addedStage.id, field: 'label' };
+              }
+              break;
+            }
+            case 'copy-stage': {
+              draftData = core.copyStage(draftData, button.dataset.monthId, button.dataset.stageId);
+              const month = draftData.months.find(item => item.id === button.dataset.monthId);
+              const sourceIndex = month
+                ? month.stages.findIndex(item => item.id === button.dataset.stageId)
+                : -1;
+              const copiedStage = sourceIndex >= 0 ? month.stages[sourceIndex + 1] : null;
+              if (copiedStage) {
+                focusRequest = { entity: 'stage', stageId: copiedStage.id, field: 'label' };
+              }
+              break;
+            }
+            case 'delete-stage':
+              if (!window.confirm('确认删除这个阶段及其中的需求吗？')) return;
+              draftData = core.removeStage(draftData, button.dataset.monthId, button.dataset.stageId);
+              focusRequest = { action: 'add-stage', monthId: button.dataset.monthId };
+              break;
+            case 'delete-month':
+              if (!window.confirm('确认删除整个月份及其所有阶段吗？')) return;
+              draftData = core.removeMonth(draftData, button.dataset.monthId);
+              focusRequest = { element: elements.addMonthButton };
+              break;
+            case 'add-requirement': {
+              draftData = core.addRequirement(draftData, button.dataset.stageId);
+              const stage = findStage(button.dataset.stageId);
+              const addedRequirement = stage && stage.requirements[stage.requirements.length - 1];
+              if (addedRequirement) {
+                focusRequest = {
+                  entity: 'requirement',
+                  stageId: stage.id,
+                  requirementId: addedRequirement.id,
+                  field: 'title'
+                };
+              }
+              break;
+            }
+            case 'insert-requirement': {
+              const insertIndex = Number(button.dataset.insertIndex);
+              draftData = core.insertRequirement(draftData, button.dataset.stageId, insertIndex);
+              const stage = findStage(button.dataset.stageId);
+              const insertedRequirement = stage && stage.requirements[insertIndex];
+              if (insertedRequirement) {
+                focusRequest = {
+                  entity: 'requirement',
+                  stageId: stage.id,
+                  requirementId: insertedRequirement.id,
+                  field: 'title'
+                };
+              }
+              break;
+            }
+            case 'delete-requirement':
+              if (!window.confirm('确认删除这条重点需求吗？')) return;
+              draftData = core.removeRequirement(draftData, button.dataset.stageId, button.dataset.requirementId);
+              focusRequest = { action: 'add-requirement', stageId: button.dataset.stageId };
+              break;
+            default:
+              return;
+          }
+          editorDirty = true;
+          setEditorStatus('有未保存的修改');
+          renderEditor();
+          renderRoadmap(draftData);
+          focusEditorTarget(focusRequest);
+        } catch (error) {
+          showToast(error.message || '操作失败，请重试。', 'warning');
+        }
+      }
+
+      function focusEditorTarget(request) {
+        if (!request) return;
+        if (request.element) {
+          request.element.focus();
+          return;
+        }
+        const candidates = Array.from(
+          elements.editorDrawer.querySelectorAll('button[data-action], input[data-entity], textarea[data-entity]')
+        );
+        const target = candidates.find(node => Object.entries(request).every(([key, value]) => (
+          node.dataset[key] === value
+        )));
+        if (target) target.focus();
+      }
+
+      function trapEditorFocus(event) {
+        if (event.key !== 'Tab') return;
+        const selector = [
+          'button:not([disabled])',
+          'input:not([disabled])',
+          'textarea:not([disabled])',
+          '[tabindex]:not([tabindex="-1"])'
+        ].join(',');
+        const focusable = Array.from(elements.editorDrawer.querySelectorAll(selector))
+          .filter(node => !node.hidden && node.getAttribute('aria-hidden') !== 'true');
+
+        if (!focusable.length) {
+          event.preventDefault();
+          elements.editorDrawer.focus();
+          return;
+        }
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        const focusIsOutside = !elements.editorDrawer.contains(document.activeElement);
+        if (event.shiftKey && (document.activeElement === first || focusIsOutside)) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && (document.activeElement === last || focusIsOutside)) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+
+      function openEditor() {
+        if (isEditorOpen()) return;
+        previousFocus = document.activeElement;
+        editorPersistenceSnapshot = {
+          pending: persistencePending,
+          message: persistenceWarningMessage
+        };
+        draftData = core.cloneRoadmap(savedData);
+        editorDirty = false;
+        setEditorStatus('尚未修改');
+        renderEditor();
+        renderRoadmap(draftData);
+        elements.editorBackdrop.hidden = false;
+        document.body.classList.add('editor-open');
+        elements.projectTitleInput.focus();
+        elements.appShell.inert = true;
+        elements.appShell.setAttribute('aria-hidden', 'true');
+      }
+
+      function closeEditor(force = false) {
+        if (!force && editorDirty && !window.confirm('放弃尚未保存的修改吗？')) {
+          return;
+        }
+        if (!force) {
+          setPersistenceWarning(editorPersistenceSnapshot.message, editorPersistenceSnapshot.pending);
+        }
+        draftData = null;
+        editorDirty = false;
+        elements.editorBackdrop.hidden = true;
+        document.body.classList.remove('editor-open');
+        renderRoadmap(savedData);
+        elements.appShell.inert = false;
+        elements.appShell.removeAttribute('aria-hidden');
+        const focusTarget = previousFocus && previousFocus.isConnected
+          ? previousFocus
+          : elements.editButton;
+        focusTarget.focus();
+        previousFocus = null;
+      }
+
+      function saveEditor() {
+        if (!draftData) return;
+        if (!editorProgressIsValid()) return;
+        try {
+          const normalized = core.normalizeRoadmapData(draftData);
+          try {
+            savedData = core.saveRoadmap(browserStorage(), normalized);
+            setPersistenceWarning('', false);
+            showToast('路线图已保存到本机浏览器。');
+          } catch (storageError) {
+            draftData = normalized;
+            editorDirty = true;
+            setPersistenceWarning(
+              '浏览器未能保存这次修改。请在编辑器内导出当前草稿，或修复存储后重试保存。',
+              true
+            );
+            setEditorStatus('保存失败：修改仍保留在编辑器中，请导出草稿备份。', 'warning');
+            renderRoadmap(draftData);
+            showToast('未能写入浏览器存储，已保留当前草稿。', 'warning');
+            return;
+          }
+          closeEditor(true);
+        } catch (error) {
+          showToast(error.message || '数据格式不正确，无法保存。', 'warning');
+        }
+      }
+
+      function addMonthFromEditor() {
+        if (!draftData) return;
+        if (!editorProgressIsValid()) return;
+        draftData = core.addMonth(draftData, '新月份');
+        const addedMonth = draftData.months[draftData.months.length - 1];
+        editorDirty = true;
+        setEditorStatus('有未保存的修改');
+        renderEditor();
+        renderRoadmap(draftData);
+        elements.editorBody = document.querySelector('.editor-body');
+        elements.editorBody.scrollTop = elements.editorBody.scrollHeight;
+        if (addedMonth) {
+          focusEditorTarget({ entity: 'month', monthId: addedMonth.id, field: 'label' });
+        }
+      }
+
+      function canvasFont(size, weight = 400) {
+        return `${weight} ${size}px "Microsoft YaHei", "PingFang SC", Arial, sans-serif`;
+      }
+
+      function wrapCanvasText(context, value, maxWidth) {
+        const characters = Array.from(String(value || ''));
+        const lines = [];
+        let line = '';
+
+        function commitLine() {
+          lines.push(line.trimEnd());
+          line = '';
+        }
+
+        characters.forEach(character => {
+          if (character === '\n') {
+            commitLine();
+            return;
+          }
+          const candidate = `${line}${character}`;
+          if (line && context.measureText(candidate).width > maxWidth) {
+            commitLine();
+            line = character.trimStart();
+          } else {
+            line = candidate;
+          }
+        });
+
+        if (line || !lines.length) commitLine();
+        return lines;
+      }
+
+      function roundedRectPath(context, x, y, width, height, radius) {
+        const safeRadius = Math.max(0, Math.min(radius, width / 2, height / 2));
+        context.beginPath();
+        context.moveTo(x + safeRadius, y);
+        context.lineTo(x + width - safeRadius, y);
+        context.quadraticCurveTo(x + width, y, x + width, y + safeRadius);
+        context.lineTo(x + width, y + height - safeRadius);
+        context.quadraticCurveTo(x + width, y + height, x + width - safeRadius, y + height);
+        context.lineTo(x + safeRadius, y + height);
+        context.quadraticCurveTo(x, y + height, x, y + height - safeRadius);
+        context.lineTo(x, y + safeRadius);
+        context.quadraticCurveTo(x, y, x + safeRadius, y);
+        context.closePath();
+      }
+
+      function fillRoundedRect(context, x, y, width, height, radius, fill, stroke = '') {
+        roundedRectPath(context, x, y, width, height, radius);
+        context.fillStyle = fill;
+        context.fill();
+        if (stroke) {
+          context.strokeStyle = stroke;
+          context.lineWidth = 1;
+          context.stroke();
+        }
+      }
+
+      function imageRequirementLayout(context, requirement, contentWidth) {
+        context.font = canvasFont(15, 700);
+        const titleLines = wrapCanvasText(
+          context,
+          displayText(requirement.title, '未命名需求'),
+          contentWidth
+        );
+        context.font = canvasFont(12.5, 400);
+        const descriptionLines = wrapCanvasText(
+          context,
+          displayText(requirement.description, '暂无需求描述'),
+          contentWidth
+        );
+        const titleHeight = titleLines.length * 22;
+        const descriptionHeight = descriptionLines.length * 20;
+        const contentBottom = 15 + titleHeight + 7 + descriptionHeight;
+        const presentation = core.progressPresentation(requirement.progress);
+        const progressTop = presentation.state === 'unreported'
+          ? null
+          : contentBottom + (presentation.state === 'not-started' ? 11 : 13);
+        const height = presentation.state === 'unreported'
+          ? contentBottom + 15
+          : progressTop + (presentation.state === 'not-started' ? 38 : 49);
+        return {
+          requirement,
+          titleLines,
+          descriptionLines,
+          presentation,
+          progressTop,
+          height
+        };
+      }
+
+      function imageStageLayout(context, stage, stageIndex, stageWidth, columnGap) {
+        context.font = canvasFont(19, 700);
+        const labelLines = wrapCanvasText(
+          context,
+          displayText(stage.label, '新阶段'),
+          stageWidth - 40
+        );
+        const countTop = 53 + (labelLines.length - 1) * 25 + 14;
+        const headerHeight = countTop + 24 + 16;
+        const requirementColumnWidth = stageWidth - 28;
+        const requirementColumns = splitRequirementColumns(stage.requirements).map(requirements => (
+          requirements.map(requirement => (
+            imageRequirementLayout(context, requirement, requirementColumnWidth - 28)
+          ))
+        ));
+        const columnHeights = requirementColumns.map(column => (
+          column.reduce((sum, item) => sum + item.height, 0)
+          + Math.max(0, column.length - 1) * 11
+        ));
+        const listHeight = requirementColumns.length
+          ? 28 + Math.max(...columnHeights)
+          : 190;
+        const width = requirementColumns.length
+          ? 28 + requirementColumns.length * requirementColumnWidth
+            + Math.max(0, requirementColumns.length - 1) * columnGap
+          : stageWidth;
+        return {
+          stage,
+          stageIndex,
+          labelLines,
+          countTop,
+          headerHeight,
+          requirementColumns,
+          requirementColumnWidth,
+          columnGap,
+          width,
+          height: Math.max(470, headerHeight + listHeight)
+        };
+      }
+
+      function createImageLayout(context, data) {
+        const metrics = {
+          padding: 48,
+          titleHeight: 112,
+          titleLineHeight: 43,
+          subtitleLineHeight: 22,
+          monthHeaderHeight: 58,
+          monthHeaderGap: 12,
+          stageWidth: 340,
+          stageGap: 12,
+          monthGap: 20
+        };
+        let stageIndex = 0;
+        const months = data.months.map(month => {
+          const stages = month.stages.map(stage => {
+            const layout = imageStageLayout(
+              context,
+              stage,
+              stageIndex,
+              metrics.stageWidth,
+              metrics.stageGap
+            );
+            stageIndex += 1;
+            return layout;
+          });
+          const monthLayout = {
+            month,
+            stages,
+            width: stages.length
+              ? stages.reduce((sum, stage) => sum + stage.width, 0)
+                + Math.max(0, stages.length - 1) * metrics.stageGap
+              : metrics.stageWidth,
+            cardHeight: stages.length ? Math.max(...stages.map(stage => stage.height)) : 260
+          };
+          context.font = canvasFont(21, 750);
+          monthLayout.labelLines = wrapCanvasText(
+            context,
+            displayText(month.label, '新月份'),
+            Math.max(120, monthLayout.width - 145)
+          );
+          return monthLayout;
+        });
+        const contentWidth = months.length
+          ? months.reduce((sum, month) => sum + month.width, 0)
+            + Math.max(0, months.length - 1) * metrics.monthGap
+          : 760;
+        const contentHeight = months.length
+          ? Math.max(...months.map(month => month.cardHeight))
+          : 260;
+        context.font = canvasFont(34, 760);
+        const titleLines = wrapCanvasText(
+          context,
+          displayText(data.projectTitle, '数通项目多月进度路线图'),
+          contentWidth
+        );
+        context.font = canvasFont(14, 400);
+        const subtitleLines = wrapCanvasText(
+          context,
+          '按月份汇总多个阶段，展示重点需求与截至阶段的累计总进度。',
+          contentWidth
+        );
+        metrics.titleHeight += Math.max(0, titleLines.length - 1) * metrics.titleLineHeight
+          + Math.max(0, subtitleLines.length - 1) * metrics.subtitleLineHeight;
+        metrics.monthHeaderHeight = Math.max(
+          metrics.monthHeaderHeight,
+          55 + Math.max(0, ...months.map(month => month.labelLines.length - 1)) * 27
+        );
+        return {
+          metrics,
+          months,
+          titleLines,
+          subtitleLines,
+          width: Math.ceil(metrics.padding * 2 + contentWidth),
+          height: Math.ceil(
+            metrics.padding * 2
+            + metrics.titleHeight
+            + metrics.monthHeaderHeight
+            + metrics.monthHeaderGap
+            + contentHeight
+          )
+        };
+      }
+
+      function drawCanvasLines(context, lines, x, firstBaseline, lineHeight) {
+        lines.forEach((line, index) => {
+          context.fillText(line, x, firstBaseline + index * lineHeight);
+        });
+      }
+
+      function drawImageRequirement(context, layout, x, y, width) {
+        fillRoundedRect(context, x, y, width, layout.height, 13, '#f7f9fc', '#e8edf4');
+        const textX = x + 14;
+        context.fillStyle = '#111c33';
+        context.font = canvasFont(15, 700);
+        drawCanvasLines(context, layout.titleLines, textX, y + 31, 22);
+
+        const descriptionTop = y + 15 + layout.titleLines.length * 22 + 7;
+        context.fillStyle = '#667085';
+        context.font = canvasFont(12.5, 400);
+        drawCanvasLines(context, layout.descriptionLines, textX, descriptionTop + 15, 20);
+
+        const presentation = layout.presentation;
+        if (presentation.state === 'unreported') {
+          return;
+        }
+
+        const progressY = y + layout.progressTop;
+        if (presentation.state === 'not-started') {
+          context.font = canvasFont(11.5, 700);
+          const badgeWidth = Math.max(72, Math.ceil(context.measureText(presentation.label).width) + 30);
+          fillRoundedRect(context, textX, progressY, badgeWidth, 24, 12, '#e9eef5');
+          fillRoundedRect(context, textX + 10, progressY + 9, 6, 6, 3, '#7b8ba5');
+          context.fillStyle = '#475467';
+          context.fillText(presentation.label, textX + 23, progressY + 16);
+          return;
+        }
+
+        context.fillStyle = presentation.state === 'complete' ? '#0f7f71' : '#174fbf';
+        context.font = canvasFont(22, 750);
+        context.fillText(presentation.label, textX, progressY + 20);
+        context.fillStyle = '#667085';
+        context.font = canvasFont(11, 650);
+        context.textAlign = 'right';
+        context.fillText('累计总进度', x + width - 14, progressY + 19);
+        context.textAlign = 'left';
+
+        const barY = progressY + 28;
+        fillRoundedRect(context, textX, barY, width - 28, 7, 4, '#dde4ee');
+        if (presentation.value > 0) {
+          fillRoundedRect(
+            context,
+            textX,
+            barY,
+            (width - 28) * presentation.value / 100,
+            7,
+            4,
+            presentation.state === 'complete' ? '#0f9f8c' : '#2563eb'
+          );
+        }
+      }
+
+      function drawImageStage(context, layout, x, y, width, height) {
+        fillRoundedRect(context, x, y, width, height, 18, '#ffffff', '#d7deea');
+        context.fillStyle = '#174fbf';
+        context.font = canvasFont(11, 750);
+        context.fillText(
+          `STAGE ${String(layout.stageIndex + 1).padStart(2, '0')}`,
+          x + 20,
+          y + 25
+        );
+        context.fillStyle = '#08152f';
+        context.font = canvasFont(19, 750);
+        drawCanvasLines(context, layout.labelLines, x + 20, y + 54, 25);
+
+        const countY = y + layout.countTop;
+        fillRoundedRect(context, x + 20, countY, 104, 24, 12, '#edf2f8');
+        context.fillStyle = '#33415c';
+        context.font = canvasFont(11, 650);
+        context.fillText(`${layout.stage.requirements.length} 项重点需求`, x + 31, countY + 16);
+
+        context.strokeStyle = '#e8edf4';
+        context.beginPath();
+        context.moveTo(x, y + layout.headerHeight);
+        context.lineTo(x + width, y + layout.headerHeight);
+        context.stroke();
+
+        if (!layout.requirementColumns.length) {
+          context.fillStyle = '#667085';
+          context.font = canvasFont(14, 400);
+          context.fillText('当前阶段暂无重点需求', x + 48, y + layout.headerHeight + 86);
+          return;
+        }
+
+        layout.requirementColumns.forEach((column, columnIndex) => {
+          const requirementX = x + 14
+            + columnIndex * (layout.requirementColumnWidth + layout.columnGap);
+          let requirementY = y + layout.headerHeight + 14;
+          column.forEach(requirementLayout => {
+            drawImageRequirement(
+              context,
+              requirementLayout,
+              requirementX,
+              requirementY,
+              layout.requirementColumnWidth
+            );
+            requirementY += requirementLayout.height + 11;
+          });
+        });
+      }
+
+      function drawRoadmapImage(context, data, layout) {
+        const { metrics } = layout;
+        context.fillStyle = '#eef2f7';
+        context.fillRect(0, 0, layout.width, layout.height);
+
+        context.fillStyle = '#174fbf';
+        context.font = canvasFont(12, 750);
+        context.fillText('PROJECT MILESTONE ROADMAP', metrics.padding, metrics.padding + 13);
+        context.fillStyle = '#08152f';
+        context.font = canvasFont(34, 760);
+        drawCanvasLines(context, layout.titleLines, metrics.padding, metrics.padding + 58, metrics.titleLineHeight);
+        context.fillStyle = '#667085';
+        context.font = canvasFont(14, 400);
+        drawCanvasLines(
+          context,
+          layout.subtitleLines,
+          metrics.padding,
+          metrics.padding + 87 + Math.max(0, layout.titleLines.length - 1) * metrics.titleLineHeight,
+          metrics.subtitleLineHeight
+        );
+
+        if (!layout.months.length) {
+          context.fillStyle = '#667085';
+          context.font = canvasFont(16, 400);
+          context.fillText('暂无月份与阶段', metrics.padding, metrics.padding + metrics.titleHeight + 80);
+          return;
+        }
+
+        let monthX = metrics.padding;
+        const monthY = metrics.padding + metrics.titleHeight;
+        layout.months.forEach(monthLayout => {
+          const gradient = context.createLinearGradient(monthX, monthY, monthX + monthLayout.width, monthY);
+          gradient.addColorStop(0, '#08152f');
+          gradient.addColorStop(1, '#18335f');
+          fillRoundedRect(
+            context,
+            monthX,
+            monthY,
+            monthLayout.width,
+            metrics.monthHeaderHeight,
+            15,
+            gradient
+          );
+          context.fillStyle = '#ffffff';
+          context.font = canvasFont(21, 750);
+          drawCanvasLines(context, monthLayout.labelLines, monthX + 20, monthY + 37, 27);
+          context.fillStyle = 'rgba(255,255,255,0.74)';
+          context.font = canvasFont(12, 650);
+          context.textAlign = 'right';
+          context.fillText(`${monthLayout.stages.length} 个阶段`, monthX + monthLayout.width - 20, monthY + 35);
+          context.textAlign = 'left';
+
+          const stageY = monthY + metrics.monthHeaderHeight + metrics.monthHeaderGap;
+          if (!monthLayout.stages.length) {
+            fillRoundedRect(context, monthX, stageY, metrics.stageWidth, monthLayout.cardHeight, 18, '#ffffff', '#d7deea');
+            context.fillStyle = '#667085';
+            context.font = canvasFont(14, 400);
+            context.fillText('本月暂无阶段', monthX + 106, stageY + 132);
+          } else {
+            let stageX = monthX;
+            monthLayout.stages.forEach(stageLayout => {
+              drawImageStage(
+                context,
+                stageLayout,
+                stageX,
+                stageY,
+                stageLayout.width,
+                monthLayout.cardHeight
+              );
+              stageX += stageLayout.width + metrics.stageGap;
+            });
+          }
+          monthX += monthLayout.width + metrics.monthGap;
+        });
+      }
+
+      function downloadBlob(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = filename;
+        document.body.append(anchor);
+        anchor.click();
+        anchor.remove();
+        window.setTimeout(() => URL.revokeObjectURL(url), 0);
+      }
+
+      async function exportCompleteImage() {
+        if (isEditorOpen()) {
+          showToast('请先保存或取消当前编辑，再导出完整图片。', 'warning');
+          return;
+        }
+        elements.imageExportButton.disabled = true;
+        elements.imageExportButton.setAttribute('aria-busy', 'true');
+        try {
+          if (document.fonts && document.fonts.ready) {
+            await document.fonts.ready;
+          }
+          const data = core.normalizeRoadmapData(savedData);
+          const canvas = document.createElement('canvas');
+          const measuringContext = canvas.getContext('2d');
+          if (!measuringContext) throw new Error('当前浏览器不支持图片绘制');
+          const layout = createImageLayout(measuringContext, data);
+          const maxEdge = 16384;
+          const maxPixels = 64 * 1024 * 1024;
+          const scale = Math.min(
+            2,
+            maxEdge / layout.width,
+            maxEdge / layout.height,
+            Math.sqrt(maxPixels / (layout.width * layout.height))
+          );
+          if (!Number.isFinite(scale) || scale <= 0) {
+            throw new Error('路线图尺寸无效，无法生成图片');
+          }
+          canvas.width = Math.max(1, Math.floor(layout.width * scale));
+          canvas.height = Math.max(1, Math.floor(layout.height * scale));
+          const context = canvas.getContext('2d');
+          if (!context) throw new Error('当前浏览器不支持图片绘制');
+          context.scale(scale, scale);
+          context.imageSmoothingEnabled = true;
+          context.imageSmoothingQuality = 'high';
+          drawRoadmapImage(context, data, layout);
+          const blob = await new Promise((resolve, reject) => {
+            canvas.toBlob(result => {
+              if (result) resolve(result);
+              else reject(new Error('图片生成失败'));
+            }, 'image/png');
+          });
+          const safeTitle = displayText(data.projectTitle, '数通项目多月进度路线图')
+            .replace(/[\\/:*?"<>|]+/g, '-')
+            .slice(0, 60);
+          downloadBlob(blob, `${safeTitle}-完整图.png`);
+          showToast(scale < 1
+            ? '完整路线图 PNG 已生成；内容较多，图片已自动缩放。'
+            : '完整路线图 PNG 已生成。');
+        } catch (error) {
+          showToast(`图片导出失败：${error.message || '请重试'}`, 'warning');
+        } finally {
+          elements.imageExportButton.disabled = false;
+          elements.imageExportButton.removeAttribute('aria-busy');
+        }
+      }
+
+      function exportRoadmap(data, filename, message) {
+        const normalized = core.normalizeRoadmapData(data);
+        const blob = new Blob([JSON.stringify(normalized, null, 2)], { type: 'application/json;charset=utf-8' });
+        downloadBlob(blob, filename);
+        showToast(message);
+      }
+
+      function exportBackup() {
+        if (isEditorOpen()) {
+          showToast('请使用编辑器中的“导出当前草稿”。', 'warning');
+          return;
+        }
+        exportRoadmap(savedData, '数通项目多月进度路线图.json', 'JSON 备份已生成。');
+      }
+
+      function exportDraft() {
+        if (!draftData) return;
+        if (!editorProgressIsValid()) return;
+        try {
+          exportRoadmap(draftData, '数通项目多月进度路线图-草稿.json', '当前草稿已导出。');
+          setEditorStatus('草稿已导出；浏览器中仍未持久保存。', 'warning');
+        } catch (error) {
+          showToast(error.message || '草稿导出失败。', 'warning');
+        }
+      }
+
+      async function importBackup(file) {
+        if (!file) return;
+        try {
+          if (isEditorOpen()) {
+            throw new Error('请先保存或取消当前编辑，再导入备份');
+          }
+          if (typeof file.size === 'number' && file.size > core.LIMITS.importBytes) {
+            throw new Error(`备份文件不能超过 ${Math.round(core.LIMITS.importBytes / 1024 / 1024)} MB`);
+          }
+          const raw = await file.text();
+          if (new Blob([raw]).size > core.LIMITS.importBytes) {
+            throw new Error(`备份文件不能超过 ${Math.round(core.LIMITS.importBytes / 1024 / 1024)} MB`);
+          }
+          if (isEditorOpen()) {
+            throw new Error('编辑器已打开，本次导入已取消');
+          }
+          const parsed = JSON.parse(raw);
+          const normalized = core.normalizeRoadmapData(parsed);
+          if (!window.confirm('导入会覆盖当前已保存的路线图，是否继续？')) return;
+          try {
+            savedData = core.saveRoadmap(browserStorage(), normalized);
+            setPersistenceWarning('', false);
+            showToast('备份已导入并保存。');
+          } catch (storageError) {
+            savedData = normalized;
+            setPersistenceWarning(
+              '备份已载入当前页面，但浏览器未能持久保存。请导出当前备份，刷新或关闭前请务必留意。',
+              true
+            );
+            showToast('备份已载入，但未能持久保存。', 'warning');
+          }
+          renderRoadmap(savedData);
+        } catch (error) {
+          showToast(`导入失败：${error.message || 'JSON 格式不正确'}`, 'warning');
+        } finally {
+          elements.importInput.value = '';
+        }
+      }
+
+      function cacheElements() {
+        elements.appShell = document.getElementById('appShell');
+        elements.pageTitle = document.getElementById('pageTitle');
+        elements.editButton = document.getElementById('editButton');
+        elements.exportButton = document.getElementById('exportButton');
+        elements.imageExportButton = document.getElementById('imageExportButton');
+        elements.importButton = document.getElementById('importButton');
+        elements.importInput = document.getElementById('importInput');
+        elements.persistenceWarning = document.getElementById('persistenceWarning');
+        elements.persistenceWarningText = document.getElementById('persistenceWarningText');
+        elements.persistenceExportButton = document.getElementById('persistenceExportButton');
+        elements.roadmapViewport = document.getElementById('roadmapViewport');
+        elements.roadmapTrack = document.getElementById('roadmapTrack');
+        elements.scrollLeftButton = document.getElementById('scrollLeftButton');
+        elements.scrollRightButton = document.getElementById('scrollRightButton');
+        elements.editorBackdrop = document.getElementById('editorBackdrop');
+        elements.editorDrawer = document.getElementById('editorDrawer');
+        elements.closeEditorButton = document.getElementById('closeEditorButton');
+        elements.cancelEditorButton = document.getElementById('cancelEditorButton');
+        elements.saveEditorButton = document.getElementById('saveEditorButton');
+        elements.exportDraftButton = document.getElementById('exportDraftButton');
+        elements.projectTitleInput = document.getElementById('projectTitleInput');
+        elements.editorMonths = document.getElementById('editorMonths');
+        elements.editorStatus = document.getElementById('editorStatus');
+        elements.addMonthButton = document.getElementById('addMonthButton');
+        elements.toast = document.getElementById('toast');
+      }
+
+      function bindEvents() {
+        elements.editButton.addEventListener('click', openEditor);
+        elements.exportButton.addEventListener('click', exportBackup);
+        elements.imageExportButton.addEventListener('click', exportCompleteImage);
+        elements.persistenceExportButton.addEventListener('click', exportBackup);
+        elements.importButton.addEventListener('click', () => {
+          if (isEditorOpen()) {
+            showToast('请先保存或取消当前编辑，再导入备份。', 'warning');
+            return;
+          }
+          elements.importInput.click();
+        });
+        elements.importInput.addEventListener('change', () => importBackup(elements.importInput.files[0]));
+        elements.scrollLeftButton.addEventListener('click', () => scrollRoadmap(-1));
+        elements.scrollRightButton.addEventListener('click', () => scrollRoadmap(1));
+        elements.roadmapViewport.addEventListener('scroll', updateScrollButtons, { passive: true });
+        window.addEventListener('resize', updateScrollButtons);
+
+        elements.closeEditorButton.addEventListener('click', () => closeEditor());
+        elements.cancelEditorButton.addEventListener('click', () => closeEditor());
+        elements.saveEditorButton.addEventListener('click', saveEditor);
+        elements.exportDraftButton.addEventListener('click', exportDraft);
+        elements.addMonthButton.addEventListener('click', addMonthFromEditor);
+        elements.projectTitleInput.addEventListener('input', () => {
+          if (!draftData) return;
+          draftData.projectTitle = elements.projectTitleInput.value;
+          markDirty();
+        });
+        elements.editorMonths.addEventListener('input', handleEditorInput);
+        elements.editorMonths.addEventListener('click', handleEditorAction);
+        document.addEventListener('keydown', event => {
+          if (elements.editorBackdrop.hidden) return;
+          trapEditorFocus(event);
+          if (event.key === 'Escape') {
+            event.preventDefault();
+            closeEditor();
+          }
+          if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
+            event.preventDefault();
+            saveEditor();
+          }
+        });
+
+        window.addEventListener('beforeunload', event => {
+          if (editorDirty || persistencePending) {
+            event.preventDefault();
+            event.returnValue = '';
+          }
+        });
+      }
+
+      function init() {
+        cacheElements();
+        const loaded = core.loadRoadmap(browserStorage());
+        savedData = loaded.data;
+        bindEvents();
+        renderRoadmap(savedData);
+        if (loaded.message) {
+          setPersistenceWarning(loaded.message, false);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init, { once: true });
+      } else {
+        init();
+      }
+    }());
+  </script>
+</body>
+</html>
