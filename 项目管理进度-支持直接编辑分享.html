@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
+<html lang="zh-CN"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light">
@@ -906,28 +905,32 @@
       </div>
       <div class="header-actions" aria-label="路线图操作">
         <button class="button button-primary" id="editButton" type="button">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4Zm11.5-13.5 2 2M13 5l4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4Zm11.5-13.5 2 2M13 5l4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
           编辑路线图
         </button>
+        <button class="button" id="saveAsVersionButton" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 17v3h14v-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          另存为新版本
+        </button>
         <button class="button" id="exportButton" type="button">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 17v3h14v-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 17v3h14v-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
           导出备份
         </button>
         <button class="button" id="imageExportButton" type="button">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM7 15l3-3 3 3 2-2 3 3M8.5 9.5h.01" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM7 15l3-3 3 3 2-2 3 3M8.5 9.5h.01" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
           导出完整图片
         </button>
         <button class="button" id="importButton" type="button">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4m0 0 4 4m-4-4L8 8M5 17v3h14v-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4m0 0 4 4m-4-4L8 8M5 17v3h14v-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
           导入备份
         </button>
-        <input id="importInput" type="file" accept="application/json,.json" hidden>
+        <input id="importInput" type="file" accept="application/json,.json" hidden="">
       </div>
     </header>
 
-    <div class="persistence-warning" id="persistenceWarning" role="alert" hidden>
+    <div class="persistence-warning" id="persistenceWarning" role="alert" hidden="">
       <p class="persistence-warning-copy" id="persistenceWarningText"></p>
-      <button class="button button-quiet" id="persistenceExportButton" type="button">导出当前备份</button>
+      <button class="button button-quiet" id="persistenceSaveAsButton" type="button">另存为新版本</button>
     </div>
 
     <main>
@@ -936,10 +939,10 @@
           <h1 class="page-title" id="pageTitle">数通项目多月进度路线图</h1>
           <div class="toolbar-actions" aria-label="横向浏览路线图">
             <button class="button scroll-button" id="scrollLeftButton" type="button" aria-label="查看前面的阶段">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
             </button>
             <button class="button scroll-button" id="scrollRightButton" type="button" aria-label="查看后面的阶段">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
             </button>
           </div>
         </div>
@@ -951,7 +954,7 @@
     </main>
   </div>
 
-  <div class="editor-backdrop" id="editorBackdrop" hidden>
+  <div class="editor-backdrop" id="editorBackdrop" hidden="">
     <aside class="editor-drawer" id="editorDrawer" role="dialog" aria-modal="true" aria-labelledby="editorTitle" tabindex="-1">
       <header class="editor-header">
         <div>
@@ -961,7 +964,7 @@
         <button class="icon-button" id="closeEditorButton" type="button" aria-label="关闭编辑器">×</button>
       </header>
       <div class="editor-body">
-        <p class="editor-lead">输入时会实时更新路线图预览；窄屏下保存或取消后可返回查看全图。只有点击“保存更新”后才会覆盖本机保存的数据。进度留空时不显示进度区，填写 0 时显示“未开始”。</p>
+        <p class="editor-lead">输入时会实时更新路线图预览；点击“保存更新”会立即应用到当前页面。需要保留或发送本次修改时，请再点击页面顶部的“另存为新版本”；进度留空时不显示进度区，填写 0 时显示“未开始”。</p>
         <div class="editor-project-field">
           <label class="field">
             <span class="field-label">页面标题</span>
@@ -984,7 +987,9 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script data-roadmap-core>
+  <script id="roadmapEmbeddedData" type="application/json">{"version":1,"projectTitle":"数通项目多月进度路线图","months":[{"id":"month-09","label":"10月","stages":[{"id":"stage-0901-0915","label":"10.08–10.16","requirements":[{"id":"combined-sku","title":"父子大小件组合SKU","description":"父子大小件组合 SKU 对接","progress":50},{"id":"requirement-mv4oa1mh-5-owmyt","title":"AMAZON三方支付-连连对接","description":"连连支付账单、提现、入账、账户余额、店铺列表、账号管理","progress":100},{"id":"requirement-mv4oaj4r-6-73azq","title":"AMAZON三方支付-万里汇对接","description":"【万里汇】账号信息、账户余额、账单概况、账单详情、店铺管理、账号关系管理","progress":60}]},{"id":"stage-mv4o5qp0-1-w798a","label":"10.16-10.23","requirements":[{"id":"requirement-mv4o6aw3-2-unci4","title":"AMAZON新版发货利润","description":"发货利润改版，包含非订单费用自动归集分摊、费用导入、费用补充分摊场景进报表等","progress":30},{"id":"requirement-mv4o7cyr-3-5k8kd","title":"亚马逊vc发货利润","description":"亚马逊VC店铺利润核算","progress":40},{"id":"requirement-mv4o7whp-4-pgn9j","title":"发货利润宽表","description":"多平台发货利润指标宽集合","progress":40}]},{"id":"stage-mv4od5ia-7-bs4oy","label":"10.23-10.30","requirements":[{"id":"requirement-mv4ode7m-8-eyiri","title":"其他平台新版发货利润适配","description":"沃尔玛、temu、美客多、eBay、tiktok，shopee、shopify，wayfair，lazada等平台适配新版发货利润","progress":null},{"id":"requirement-mv51ju37-1-2tgnx","title":"三方支付平台匹配AMAZON回款","description":"连连支付、万里汇、P卡、pingpong匹配亚马逊回款","progress":null}]}]}]}</script>
+
+  <script data-roadmap-core="">
     (function initializeRoadmapCore(globalObject) {
       'use strict';
 
@@ -1498,7 +1503,7 @@
     }(globalThis));
   </script>
 
-  <script data-roadmap-app>
+  <script data-roadmap-app="">
     (function initializeRoadmapApp() {
       'use strict';
 
@@ -1506,6 +1511,7 @@
         return;
       }
 
+      const ORIGINAL_HTML_TEMPLATE = `<!DOCTYPE html>\n${document.documentElement.outerHTML}`;
       const core = globalThis.MilestoneRoadmapCore;
       const REQUIREMENTS_PER_COLUMN = 4;
       let savedData;
@@ -1516,6 +1522,12 @@
       let editorPersistenceSnapshot = { pending: false, message: '' };
       let previousFocus = null;
       let toastTimer = null;
+      let saveInProgress = false;
+      let lastVersionTimestamp = '';
+      let versionFileSequence = 0;
+
+      const EMBEDDED_DATA_ID = 'roadmapEmbeddedData';
+      const EMBEDDED_DATA_PATTERN = /(<script\b[^>]*\bid=["']roadmapEmbeddedData["'][^>]*>)([\s\S]*?)(<\/script>)/i;
 
       const elements = {};
 
@@ -1581,6 +1593,106 @@
         } catch (error) {
           return null;
         }
+      }
+
+      function roadmapDataFromHtml(sourceHtml) {
+        const match = String(sourceHtml || '').match(EMBEDDED_DATA_PATTERN);
+        if (!match || !match[2].trim()) return null;
+        return core.normalizeRoadmapData(JSON.parse(match[2]));
+      }
+
+      function readEmbeddedRoadmap() {
+        const snapshot = document.getElementById(EMBEDDED_DATA_ID);
+        if (!snapshot || !snapshot.textContent.trim()) return null;
+        try {
+          return core.normalizeRoadmapData(JSON.parse(snapshot.textContent));
+        } catch (error) {
+          return null;
+        }
+      }
+
+      function loadInitialRoadmap() {
+        const embedded = readEmbeddedRoadmap();
+        if (embedded) {
+          return { data: embedded, status: 'embedded', message: '' };
+        }
+        return core.loadRoadmap(browserStorage());
+      }
+
+      function safeEmbeddedJson(data) {
+        return JSON.stringify(data)
+          .replace(/&/g, '\\u0026')
+          .replace(/</g, '\\u003c')
+          .replace(/>/g, '\\u003e')
+          .replace(/\u2028/g, '\\u2028')
+          .replace(/\u2029/g, '\\u2029');
+      }
+
+      function currentHtmlFileName() {
+        try {
+          const pathname = window.location && typeof window.location.pathname === 'string'
+            ? window.location.pathname
+            : '';
+          const encodedName = pathname.split('/').filter(Boolean).pop() || '';
+          return decodeURIComponent(encodedName);
+        } catch (error) {
+          return '';
+        }
+      }
+
+      function twoDigits(value) {
+        return String(value).padStart(2, '0');
+      }
+
+      function nextVersionFileName() {
+        const now = new Date();
+        const timestamp = [
+          now.getFullYear(),
+          twoDigits(now.getMonth() + 1),
+          twoDigits(now.getDate())
+        ].join('') + '-' + [
+          twoDigits(now.getHours()),
+          twoDigits(now.getMinutes()),
+          twoDigits(now.getSeconds())
+        ].join('');
+        if (timestamp === lastVersionTimestamp) {
+          versionFileSequence += 1;
+        } else {
+          lastVersionTimestamp = timestamp;
+          versionFileSequence = 1;
+        }
+        const sequenceSuffix = versionFileSequence > 1
+          ? `-${twoDigits(versionFileSequence)}`
+          : '';
+        const sourceName = currentHtmlFileName()
+          .replace(/\.html?$/i, '')
+          .replace(/\s*\(\d+\)$/i, '');
+        const cleanBase = sourceName
+          .replace(/-(?:新版本-)?\d{8}-\d{6}(?:-\d{2})?$/i, '')
+          .replace(/[\\/:*?"<>|]+/g, '-')
+          .trim() || '数通项目路线图';
+        return `${cleanBase}-${timestamp}${sequenceSuffix}.html`;
+      }
+
+      function validateRoadmapHtml(sourceHtml) {
+        const source = String(sourceHtml || '');
+        const snapshotCount = (source.match(/\bid=["']roadmapEmbeddedData["']/gi) || []).length;
+        const coreCount = (source.match(/<script\s+data-roadmap-core\b/gi) || []).length;
+        const appCount = (source.match(/<script\s+data-roadmap-app\b/gi) || []).length;
+        if (snapshotCount !== 1 || coreCount !== 1 || appCount !== 1 || !EMBEDDED_DATA_PATTERN.test(source)) {
+          throw new Error('无法生成完整的新版本 HTML，请重新打开当前文件后再试。');
+        }
+      }
+
+      function htmlWithEmbeddedRoadmap(sourceHtml, data) {
+        validateRoadmapHtml(sourceHtml);
+        const embeddedJson = safeEmbeddedJson(data);
+        return String(sourceHtml).replace(
+          EMBEDDED_DATA_PATTERN,
+          (fullMatch, openingTag, previousData, closingTag) => (
+            `${openingTag}${embeddedJson}${closingTag}`
+          )
+        );
       }
 
       function splitRequirementColumns(requirements) {
@@ -1915,6 +2027,7 @@
       }
 
       function handleEditorInput(event) {
+        if (saveInProgress) return;
         const input = event.target;
         const entity = input.dataset.entity;
         if (!entity || !draftData) return;
@@ -1964,6 +2077,7 @@
       }
 
       function handleEditorAction(event) {
+        if (saveInProgress) return;
         const button = event.target.closest('button[data-action]');
         if (!button || !draftData) return;
         if (!editorProgressIsValid()) return;
@@ -2113,6 +2227,10 @@
       }
 
       function closeEditor(force = false) {
+        if (saveInProgress && !force) {
+          showToast('正在应用当前修改，请稍候。', 'warning');
+          return;
+        }
         if (!force && editorDirty && !window.confirm('放弃尚未保存的修改吗？')) {
           return;
         }
@@ -2134,34 +2252,34 @@
       }
 
       function saveEditor() {
-        if (!draftData) return;
+        if (!draftData || saveInProgress) return;
         if (!editorProgressIsValid()) return;
         try {
           const normalized = core.normalizeRoadmapData(draftData);
-          try {
-            savedData = core.saveRoadmap(browserStorage(), normalized);
-            setPersistenceWarning('', false);
-            showToast('路线图已保存到本机浏览器。');
-          } catch (storageError) {
-            draftData = normalized;
-            editorDirty = true;
+          const hasPageChanges = editorDirty
+            || JSON.stringify(normalized) !== JSON.stringify(savedData);
+          savedData = core.cloneRoadmap(normalized);
+          closeEditor(true);
+          if (hasPageChanges || persistencePending) {
             setPersistenceWarning(
-              '浏览器未能保存这次修改。请在编辑器内导出当前草稿，或修复存储后重试保存。',
+              '当前修改已应用到本页面，但尚未保存为新的 HTML 文件。请点击页面顶部“另存为新版本”。',
               true
             );
-            setEditorStatus('保存失败：修改仍保留在编辑器中，请导出草稿备份。', 'warning');
-            renderRoadmap(draftData);
-            showToast('未能写入浏览器存储，已保留当前草稿。', 'warning');
-            return;
+            showToast('修改已应用，请点击“另存为新版本”生成新文件。', 'warning');
+          } else {
+            showToast('当前页面没有新的修改。');
           }
-          closeEditor(true);
         } catch (error) {
-          showToast(error.message || '数据格式不正确，无法保存。', 'warning');
+          editorDirty = true;
+          const message = error && error.message ? error.message : '无法应用当前修改，请检查后重试。';
+          setEditorStatus(`保存失败：${message}`, 'warning');
+          renderRoadmap(draftData);
+          showToast(message, 'warning');
         }
       }
 
       function addMonthFromEditor() {
-        if (!draftData) return;
+        if (!draftData || saveInProgress) return;
         if (!editorProgressIsValid()) return;
         draftData = core.addMonth(draftData, '新月份');
         const addedMonth = draftData.months[draftData.months.length - 1];
@@ -2584,6 +2702,33 @@
         window.setTimeout(() => URL.revokeObjectURL(url), 0);
       }
 
+      function saveAsNewVersion() {
+        if (isEditorOpen()) {
+          showToast('请先点击“保存更新”应用当前编辑，再另存为新版本。', 'warning');
+          return;
+        }
+        elements.saveAsVersionButton.disabled = true;
+        elements.saveAsVersionButton.setAttribute('aria-busy', 'true');
+        try {
+          const normalized = core.normalizeRoadmapData(savedData);
+          const versionHtml = htmlWithEmbeddedRoadmap(ORIGINAL_HTML_TEMPLATE, normalized);
+          const verifiedData = roadmapDataFromHtml(versionHtml);
+          if (!verifiedData || JSON.stringify(verifiedData) !== JSON.stringify(normalized)) {
+            throw new Error('新版本内容校验失败，请重试。');
+          }
+          const filename = nextVersionFileName();
+          const blob = new Blob([versionHtml], { type: 'text/html;charset=utf-8' });
+          downloadBlob(blob, filename);
+          setPersistenceWarning('', false);
+          showToast(`已发起新版本下载，请在下载列表中确认：${filename}`);
+        } catch (error) {
+          showToast(`另存失败：${error.message || '请重试'}`, 'warning');
+        } finally {
+          elements.saveAsVersionButton.disabled = false;
+          elements.saveAsVersionButton.removeAttribute('aria-busy');
+        }
+      }
+
       async function exportCompleteImage() {
         if (isEditorOpen()) {
           showToast('请先保存或取消当前编辑，再导出完整图片。', 'warning');
@@ -2684,20 +2829,18 @@
           }
           const parsed = JSON.parse(raw);
           const normalized = core.normalizeRoadmapData(parsed);
-          if (!window.confirm('导入会覆盖当前已保存的路线图，是否继续？')) return;
-          try {
-            savedData = core.saveRoadmap(browserStorage(), normalized);
-            setPersistenceWarning('', false);
-            showToast('备份已导入并保存。');
-          } catch (storageError) {
-            savedData = normalized;
-            setPersistenceWarning(
-              '备份已载入当前页面，但浏览器未能持久保存。请导出当前备份，刷新或关闭前请务必留意。',
-              true
-            );
-            showToast('备份已载入，但未能持久保存。', 'warning');
-          }
-          renderRoadmap(savedData);
+          if (!window.confirm('导入内容将作为未保存草稿打开，确认继续？')) return;
+          openEditor();
+          draftData = core.cloneRoadmap(normalized);
+          editorDirty = true;
+          renderEditor();
+          renderRoadmap(draftData);
+          setPersistenceWarning(
+            '导入内容尚未应用到页面，请在编辑器中点击“保存更新”。',
+            true
+          );
+          setEditorStatus('导入内容是未应用草稿；请点击“保存更新”更新当前页面。', 'warning');
+          showToast('备份已载入为草稿，请点击“保存更新”。', 'warning');
         } catch (error) {
           showToast(`导入失败：${error.message || 'JSON 格式不正确'}`, 'warning');
         } finally {
@@ -2709,13 +2852,14 @@
         elements.appShell = document.getElementById('appShell');
         elements.pageTitle = document.getElementById('pageTitle');
         elements.editButton = document.getElementById('editButton');
+        elements.saveAsVersionButton = document.getElementById('saveAsVersionButton');
         elements.exportButton = document.getElementById('exportButton');
         elements.imageExportButton = document.getElementById('imageExportButton');
         elements.importButton = document.getElementById('importButton');
         elements.importInput = document.getElementById('importInput');
         elements.persistenceWarning = document.getElementById('persistenceWarning');
         elements.persistenceWarningText = document.getElementById('persistenceWarningText');
-        elements.persistenceExportButton = document.getElementById('persistenceExportButton');
+        elements.persistenceSaveAsButton = document.getElementById('persistenceSaveAsButton');
         elements.roadmapViewport = document.getElementById('roadmapViewport');
         elements.roadmapTrack = document.getElementById('roadmapTrack');
         elements.scrollLeftButton = document.getElementById('scrollLeftButton');
@@ -2735,9 +2879,10 @@
 
       function bindEvents() {
         elements.editButton.addEventListener('click', openEditor);
+        elements.saveAsVersionButton.addEventListener('click', saveAsNewVersion);
         elements.exportButton.addEventListener('click', exportBackup);
         elements.imageExportButton.addEventListener('click', exportCompleteImage);
-        elements.persistenceExportButton.addEventListener('click', exportBackup);
+        elements.persistenceSaveAsButton.addEventListener('click', saveAsNewVersion);
         elements.importButton.addEventListener('click', () => {
           if (isEditorOpen()) {
             showToast('请先保存或取消当前编辑，再导入备份。', 'warning');
@@ -2757,7 +2902,7 @@
         elements.exportDraftButton.addEventListener('click', exportDraft);
         elements.addMonthButton.addEventListener('click', addMonthFromEditor);
         elements.projectTitleInput.addEventListener('input', () => {
-          if (!draftData) return;
+          if (!draftData || saveInProgress) return;
           draftData.projectTitle = elements.projectTitleInput.value;
           markDirty();
         });
@@ -2786,7 +2931,7 @@
 
       function init() {
         cacheElements();
-        const loaded = core.loadRoadmap(browserStorage());
+        const loaded = loadInitialRoadmap();
         savedData = loaded.data;
         bindEvents();
         renderRoadmap(savedData);
@@ -2801,6 +2946,4 @@
         init();
       }
     }());
-  </script>
-</body>
-</html>
+  </script></body></html>
