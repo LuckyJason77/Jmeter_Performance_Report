@@ -13,7 +13,7 @@ from datetime import datetime
 from pathlib import Path
 
 from jtl_parser import parse_jtl
-from metrics import calculate_metrics, percentile
+from metrics import calculate_metrics, percentile, TimeSeriesPoint
 
 
 def safe_str(value, default=""):
@@ -23,13 +23,18 @@ def safe_str(value, default=""):
     return html.escape(str(value))
 
 
+def to_json(value):
+    """序列化为 JSON 并转义 '</'，防止内联 <script> 被数据中的 </script> 提前闭合"""
+    return json.dumps(value, ensure_ascii=False).replace('</', '<\\/')
+
+
 def generate_report(data, output_path: str, source_file: str = ""):
     """生成 HTML 报告"""
     metrics = calculate_metrics(data)
 
     if metrics.total_samples == 0:
         print("警告：没有有效的样本数据")
-        return
+        return False
 
     # 读取模板
     template_path = Path(__file__).parent / "report_template.html"
@@ -83,13 +88,14 @@ def generate_report(data, output_path: str, source_file: str = ""):
                     avg_rt = sum(p.avg_rt for p in chunk) / len(chunk)
                     total_count = sum(p.count for p in chunk)
                     total_errors = sum(p.error_count for p in chunk)
-                    sampled_point = type(raw_data[0])()
-                    sampled_point.timestamp = chunk[0].timestamp
-                    sampled_point.avg_rt = avg_rt
-                    sampled_point.count = total_count
-                    sampled_point.error_count = total_errors
-                    sampled_point.throughput = total_count / len(chunk)
-                    sampled_data.append(sampled_point)
+                    span_sec = (chunk[-1].timestamp - chunk[0].timestamp) / 1000 + 1
+                    sampled_data.append(TimeSeriesPoint(
+                        timestamp=chunk[0].timestamp,
+                        count=total_count,
+                        avg_rt=avg_rt,
+                        error_count=total_errors,
+                        throughput=total_count / span_sec,
+                    ))
             raw_data = sampled_data
 
         for point in raw_data:
@@ -134,10 +140,10 @@ def generate_report(data, output_path: str, source_file: str = ""):
         label_rows.append(f"""
             <tr data-interface-name="{safe_str(label)}">
                 <td class="label-name" title="{safe_str(label)}">{safe_str(display_label)}</td>
-                <td>{stats.count:,}</td>
-                <td style="color: #10b981;">{stats.success_count:,}</td>
-                <td style="color: #ef4444;">{stats.error_count:,}</td>
-                <td>
+                <td data-value="{stats.count}">{stats.count:,}</td>
+                <td data-value="{stats.success_count}" style="color: #10b981;">{stats.success_count:,}</td>
+                <td data-value="{stats.error_count}" style="color: #ef4444;">{stats.error_count:,}</td>
+                <td data-value="{label_error_rate:.4f}">
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <div class="progress-bar" style="background: #2a2f3a; border-radius: 3px; height: 6px; min-width: 80px; overflow: hidden;">
                             <div style="height: 100%; background: {'#ef4444' if label_error_rate > 5 else '#f59e0b' if label_error_rate > 1 else '#10b981'}; border-radius: 3px; width: {min(label_error_rate, 100)}%"></div>
@@ -145,16 +151,16 @@ def generate_report(data, output_path: str, source_file: str = ""):
                         <span style="color: {'#ef4444' if label_error_rate > 5 else '#f59e0b' if label_error_rate > 1 else '#10b981'}">{label_error_rate:.2f}%</span>
                     </div>
                 </td>
-                <td>{label_avg:.2f} ms</td>
-                <td>{label_p95:.2f} ms</td>
-                <td>{label_p99:.2f} ms</td>
-                <td>{stats.min_rt} / {stats.max_rt} ms</td>
-                <td>{label_latency_avg:.2f} ms</td>
-                <td>{label_connect_avg:.2f} ms</td>
-                <td>{label_idle_avg:.2f} ms</td>
-                <td>{avg_threads}</td>
-                <td>{total_sample_count:,}</td>
-                <td>{total_error_count:,}</td>
+                <td data-value="{label_avg:.4f}">{label_avg:.2f} ms</td>
+                <td data-value="{label_p95:.4f}">{label_p95:.2f} ms</td>
+                <td data-value="{label_p99:.4f}">{label_p99:.2f} ms</td>
+                <td data-value="{stats.max_rt}">{stats.min_rt} / {stats.max_rt} ms</td>
+                <td data-value="{label_latency_avg:.4f}">{label_latency_avg:.2f} ms</td>
+                <td data-value="{label_connect_avg:.4f}">{label_connect_avg:.2f} ms</td>
+                <td data-value="{label_idle_avg:.4f}">{label_idle_avg:.2f} ms</td>
+                <td data-value="{avg_threads}">{avg_threads}</td>
+                <td data-value="{total_sample_count}">{total_sample_count:,}</td>
+                <td data-value="{total_error_count}">{total_error_count:,}</td>
                 <td>{url_count}</td>
             </tr>
         """)
@@ -517,18 +523,16 @@ def generate_report(data, output_path: str, source_file: str = ""):
     label_chart_height = max(350, len(label_names) * 38 + 40)
 
     replacements = {
-        "{{title}}": "性能测试报告",
         "{{status_class}}": status_class,
         "{{status_text}}": status_text,
         "{{generated_time}}": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "{{file_name}}": file_name,
+        "{{file_name}}": safe_str(file_name),
         "{{total_samples}}": f"{metrics.total_samples:,}",
         "{{duration}}": f"{metrics.duration_seconds:.2f}",
         "{{avg_rt}}": f"{metrics.avg_rt:.2f}",
         "{{throughput}}": f"{metrics.throughput:.2f}",
         "{{error_rate}}": f"{metrics.error_rate:.2f}",
         "{{error_color}}": error_color,
-        "{{p95_rt}}": f"{metrics.p95_rt:.2f}",
         "{{min_rt}}": str(int(metrics.min_rt)),
         "{{median_rt}}": f"{metrics.median_rt:.2f}",
         "{{p90_rt}}": f"{metrics.p90_rt:.2f}",
@@ -540,12 +544,12 @@ def generate_report(data, output_path: str, source_file: str = ""):
         "{{p90_pct}}": f"{p90_pct:.1f}",
         "{{p95_pct}}": f"{p95_pct:.1f}",
         "{{p99_pct}}": f"{p99_pct:.1f}",
-        "{{time_labels}}": json.dumps(time_labels) if time_labels else '[]',
-        "{{rt_data}}": json.dumps(rt_data) if rt_data else '[]',
-        "{{throughput_data}}": json.dumps(throughput_data) if throughput_data else '[]',
-        "{{error_data}}": json.dumps(error_data) if error_data else '[]',
-        "{{label_names}}": json.dumps(label_names) if label_names else '[]',
-        "{{label_rt_data}}": json.dumps(label_rt_data) if label_rt_data else '[]',
+        "{{time_labels}}": to_json(time_labels),
+        "{{rt_data}}": to_json(rt_data),
+        "{{throughput_data}}": to_json(throughput_data),
+        "{{error_data}}": to_json(error_data),
+        "{{label_names}}": to_json(label_names),
+        "{{label_rt_data}}": to_json(label_rt_data),
         "{{label_rows}}": "".join(label_rows) if label_rows else '<tr><td colspan="16" class="empty-state">无数据</td></tr>',
         "{{slow_diagnostics_section}}": slow_diagnostics_section,
         "{{error_section}}": error_section,
@@ -573,6 +577,7 @@ def generate_report(data, output_path: str, source_file: str = ""):
     print(f"  - 平均 RT: {metrics.avg_rt:.2f}ms")
     print(f"  - 吞吐量：{metrics.throughput:.2f} req/s")
     print(f"  - 错误率：{metrics.error_rate:.2f}%")
+    return True
 
 
 def main():

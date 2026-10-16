@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>性能测试报告 - {{title}}</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-crosshair@1.2.0/dist/chartjs-plugin-crosshair.min.js"></script>
+    <title>性能测试报告 - {{file_name}}</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
     <style>
         :root {
             --bg-primary: #0b0c0e;
@@ -872,7 +871,6 @@
         summary:hover {
             color: var(--accent-cyan);
         }
-        }
     </style>
 </head>
 <body>
@@ -1000,9 +998,9 @@
                         响应时间趋势
                     </h3>
                     <div class="chart-container">
-                        <canvas id="rtChart"></canvas>
+                        <canvas id="rtChart" role="img" aria-label="响应时间趋势图">您的浏览器不支持 canvas，无法显示响应时间趋势图。</canvas>
                     </div>
-                    <div class="chart-hint">💡 支持鼠标滚轮缩放、拖拽平移</div>
+                    <div class="chart-hint"><span aria-hidden="true">💡</span> 支持鼠标滚轮缩放、拖拽平移</div>
                 </div>
 
                 <div class="chart-card">
@@ -1016,7 +1014,7 @@
                         吞吐量 (req/s)
                     </h3>
                     <div class="chart-container">
-                        <canvas id="throughputChart"></canvas>
+                        <canvas id="throughputChart" role="img" aria-label="吞吐量趋势图">您的浏览器不支持 canvas，无法显示吞吐量趋势图。</canvas>
                     </div>
                 </div>
 
@@ -1030,7 +1028,7 @@
                         错误数趋势
                     </h3>
                     <div class="chart-container">
-                        <canvas id="errorChart"></canvas>
+                        <canvas id="errorChart" role="img" aria-label="错误数趋势图">您的浏览器不支持 canvas，无法显示错误数趋势图。</canvas>
                     </div>
                 </div>
 
@@ -1044,9 +1042,9 @@
                         各接口响应时间对比
                     </h3>
                     <div class="chart-container label-chart" style="height: {{label_chart_height}}px;">
-                        <canvas id="labelChart"></canvas>
+                        <canvas id="labelChart" role="img" aria-label="各接口响应时间对比图">您的浏览器不支持 canvas，无法显示各接口响应时间对比图。</canvas>
                     </div>
-                    <div class="chart-hint">💡 支持鼠标滚轮缩放、拖拽平移，可上下滚动查看所有接口</div>
+                    <div class="chart-hint"><span aria-hidden="true">💡</span> 支持鼠标滚轮缩放、拖拽平移，可上下滚动查看所有接口</div>
                 </div>
             </div>
         </div>
@@ -1083,20 +1081,20 @@
                     <thead>
                         <tr>
                             <th>接口名称</th>
-                            <th class="sortable" data-sort="count">请求数 <span class="sort-icon">↕</span></th>
-                            <th class="sortable" data-sort="success">成功 <span class="sort-icon">↕</span></th>
-                            <th class="sortable" data-sort="error">失败 <span class="sort-icon">↕</span></th>
-                            <th class="sortable" data-sort="errorRate">错误率 <span class="sort-icon">↕</span></th>
-                            <th class="sortable" data-sort="avgRt">平均 RT <span class="sort-icon">↕</span></th>
-                            <th class="sortable" data-sort="p95Rt">P95 RT <span class="sort-icon">↕</span></th>
-                            <th class="sortable" data-sort="p99Rt">P99 RT <span class="sort-icon">↕</span></th>
-                            <th class="sortable" data-sort="minMax">Min / Max <span class="sort-icon">↕</span></th>
-                            <th class="sortable" data-sort="latency">Latency <span class="sort-icon">↕</span></th>
-                            <th class="sortable" data-sort="connect">连接时间 <span class="sort-icon">↕</span></th>
-                            <th class="sortable" data-sort="idle">空闲时间 <span class="sort-icon">↕</span></th>
-                            <th class="sortable" data-sort="threads">并发线程 <span class="sort-icon">↕</span></th>
-                            <th class="sortable" data-sort="sampleCount">Sample Count <span class="sort-icon">↕</span></th>
-                            <th class="sortable" data-sort="errorCount">Error Count <span class="sort-icon">↕</span></th>
+                            <th class="sortable" data-sort="count" tabindex="0" role="button" aria-sort="none">请求数 <span class="sort-icon" aria-hidden="true">↕</span></th>
+                            <th class="sortable" data-sort="success" tabindex="0" role="button" aria-sort="none">成功 <span class="sort-icon" aria-hidden="true">↕</span></th>
+                            <th class="sortable" data-sort="error" tabindex="0" role="button" aria-sort="none">失败 <span class="sort-icon" aria-hidden="true">↕</span></th>
+                            <th class="sortable" data-sort="errorRate" tabindex="0" role="button" aria-sort="none">错误率 <span class="sort-icon" aria-hidden="true">↕</span></th>
+                            <th class="sortable" data-sort="avgRt" tabindex="0" role="button" aria-sort="none">平均 RT <span class="sort-icon" aria-hidden="true">↕</span></th>
+                            <th class="sortable" data-sort="p95Rt" tabindex="0" role="button" aria-sort="none">P95 RT <span class="sort-icon" aria-hidden="true">↕</span></th>
+                            <th class="sortable" data-sort="p99Rt" tabindex="0" role="button" aria-sort="none">P99 RT <span class="sort-icon" aria-hidden="true">↕</span></th>
+                            <th class="sortable" data-sort="minMax" tabindex="0" role="button" aria-sort="none">Min / Max <span class="sort-icon" aria-hidden="true">↕</span></th>
+                            <th class="sortable" data-sort="latency" tabindex="0" role="button" aria-sort="none">Latency <span class="sort-icon" aria-hidden="true">↕</span></th>
+                            <th class="sortable" data-sort="connect" tabindex="0" role="button" aria-sort="none">连接时间 <span class="sort-icon" aria-hidden="true">↕</span></th>
+                            <th class="sortable" data-sort="idle" tabindex="0" role="button" aria-sort="none">空闲时间 <span class="sort-icon" aria-hidden="true">↕</span></th>
+                            <th class="sortable" data-sort="threads" tabindex="0" role="button" aria-sort="none">并发线程 <span class="sort-icon" aria-hidden="true">↕</span></th>
+                            <th class="sortable" data-sort="sampleCount" tabindex="0" role="button" aria-sort="none">Sample Count <span class="sort-icon" aria-hidden="true">↕</span></th>
+                            <th class="sortable" data-sort="errorCount" tabindex="0" role="button" aria-sort="none">Error Count <span class="sort-icon" aria-hidden="true">↕</span></th>
                             <th>URL 数</th>
                         </tr>
                     </thead>
@@ -1122,7 +1120,31 @@
     </footer>
 
     <script>
+        // 等 DOM 与 defer 加载的 Chart.js 就绪后再初始化
+        document.addEventListener('DOMContentLoaded', function () {
+        // 内联竖直参考线插件（替代已移除的 chartjs-plugin-crosshair，兼容 Chart.js v4）
+        const crosshairLinePlugin = {
+            id: 'crosshairLine',
+            afterDatasetsDraw(chart) {
+                if (chart.options.indexAxis === 'y') return;  // 横向条形图不需要竖直参考线
+                const active = chart.getActiveElements ? chart.getActiveElements() : [];
+                if (!active.length) return;
+                const x = active[0].element.x;
+                const area = chart.chartArea;
+                const ctx = chart.ctx;
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(x, area.top);
+                ctx.lineTo(x, area.bottom);
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = '#3b82f6';
+                ctx.stroke();
+                ctx.restore();
+            }
+        };
+
         // Chart.js 全局配置
+        Chart.register(crosshairLinePlugin);
         Chart.defaults.color = '#9ca3af';
         Chart.defaults.borderColor = '#2a2f3a';
         Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
@@ -1168,22 +1190,15 @@
                         },
                         mode: 'x',
                     }
-                },
-                crosshair: {
-                    line: {
-                        color: '#3b82f6',
-                        width: 1
-                    },
-                    snap: {
-                        enabled: true
-                    }
                 }
             },
             scales: {
                 x: {
                     grid: {
                         color: '#2a2f3a',
-                        drawBorder: false,
+                    },
+                    border: {
+                        display: false,
                     },
                     ticks: {
                         color: '#6b7280',
@@ -1194,7 +1209,9 @@
                 y: {
                     grid: {
                         color: '#2a2f3a',
-                        drawBorder: false,
+                    },
+                    border: {
+                        display: false,
                     },
                     ticks: {
                         color: '#6b7280'
@@ -1279,16 +1296,10 @@
             options: commonOptions
         });
 
-        // 接口对比图 - 动态计算图表高度
+        // 接口对比图（容器高度由服务端注入的 {{label_chart_height}} 决定，避免与 JS 双算）
         const labelData = {{label_rt_data}};
-        const labelCount = labelData.length;
-        const barHeight = 26; // 每个条形的高度
-        const labelSpacing = 12; // 每个标签的间距
-        const chartHeight = Math.max(350, labelCount * (barHeight + labelSpacing) + 40);
-
-        // 设置容器高度
-        const labelChartContainer = document.getElementById('labelChart').parentNode;
-        labelChartContainer.style.height = chartHeight + 'px';
+        // 用 reduce 求最大值，避免 Math.max(...arr) 在大数组时超出调用栈参数上限
+        const maxLabelVal = labelData.reduce((a, b) => Math.max(a, b), 0) || 1;
 
         const labelCtx = document.getElementById('labelChart').getContext('2d');
         new Chart(labelCtx, {
@@ -1299,17 +1310,13 @@
                     label: '平均响应时间 (ms)',
                     data: labelData,
                     backgroundColor: function(context) {
-                        const value = context.raw;
-                        const maxVal = Math.max(...labelData);
-                        const ratio = value / maxVal;
+                        const ratio = context.raw / maxLabelVal;
                         if (ratio > 0.7) return 'rgba(239, 68, 68, 0.8)';
                         if (ratio > 0.4) return 'rgba(245, 158, 11, 0.8)';
                         return 'rgba(16, 185, 129, 0.8)';
                     },
                     borderColor: function(context) {
-                        const value = context.raw;
-                        const maxVal = Math.max(...labelData);
-                        const ratio = value / maxVal;
+                        const ratio = context.raw / maxLabelVal;
                         if (ratio > 0.7) return '#ef4444';
                         if (ratio > 0.4) return '#f59e0b';
                         return '#10b981';
@@ -1355,11 +1362,13 @@
                 },
                 scales: {
                     x: {
-                        grid: { color: '#2a2f3a', drawBorder: false },
+                        grid: { color: '#2a2f3a' },
+                        border: { display: false },
                         ticks: { color: '#6b7280' }
                     },
                     y: {
-                        grid: { color: '#2a2f3a', drawBorder: false },
+                        grid: { color: '#2a2f3a' },
+                        border: { display: false },
                         ticks: {
                             color: '#9ca3af',
                             autoSkip: false,
@@ -1377,6 +1386,13 @@
         const table = document.getElementById('interfaceStatsTable');
         const tbody = table ? table.querySelector('tbody') : null;
         const headers = table ? table.querySelectorAll('.sortable') : [];
+        // 由表头实际顺序推导 sortKey -> 列索引，避免硬编码（增删列不会错位）
+        const colIndexBySort = {};
+        if (table) {
+            table.querySelectorAll('thead th').forEach((th, i) => {
+                if (th.dataset.sort) colIndexBySort[th.dataset.sort] = i;
+            });
+        }
         const interfaceFilterInput = document.getElementById('interfaceFilterInput');
         const interfaceFilterClear = document.getElementById('interfaceFilterClear');
         const interfaceFilterCount = document.getElementById('interfaceFilterCount');
@@ -1444,22 +1460,20 @@
 
         // 解析单元格数据
         function parseCellData(cell, sortKey) {
+            if (!cell) return 0;
+            // 优先读服务端注入的 data-value（原始数值，不受展示格式化影响）
+            if (cell.dataset.value !== undefined) {
+                const num = parseFloat(cell.dataset.value);
+                if (!isNaN(num)) return num;
+            }
+            // 回退：从展示文本解析
             const text = cell.textContent.trim();
-            if (sortKey === 'count' || sortKey === 'success' || sortKey === 'error' || sortKey === 'threads' || sortKey === 'sampleCount' || sortKey === 'errorCount') {
-                return parseInt(text.replace(/,/g, '')) || 0;
-            }
-            if (sortKey === 'errorRate') {
-                return parseFloat(text.replace('%', '')) || 0;
-            }
-            if (sortKey === 'avgRt' || sortKey === 'p95Rt' || sortKey === 'p99Rt' || sortKey === 'latency' || sortKey === 'connect' || sortKey === 'idle') {
-                return parseFloat(text.replace('ms', '')) || 0;
-            }
             if (sortKey === 'minMax') {
-                // 按 Max 值排序
-                const match = text.match(/\/\s*(\d+)/);
-                return match ? parseInt(match[1]) : 0;
+                const match = text.match(/\/\s*([\d,]+)/);
+                return match ? parseInt(match[1].replace(/,/g, ''), 10) : 0;
             }
-            return text;
+            const num = parseFloat(text.replace(/[^0-9.\-]/g, ''));
+            return isNaN(num) ? text : num;
         }
 
         // 排序处理
@@ -1476,11 +1490,14 @@
 
             const direction = sortDirection[sortKey];
 
-            // 更新表头样式
+            // 更新表头样式与 aria-sort（可访问性）
             headers.forEach(th => {
                 th.classList.remove('sorted-asc', 'sorted-desc');
                 if (th.dataset.sort === sortKey) {
                     th.classList.add(direction === 'asc' ? 'sorted-asc' : 'sorted-desc');
+                    th.setAttribute('aria-sort', direction === 'asc' ? 'ascending' : 'descending');
+                } else {
+                    th.setAttribute('aria-sort', 'none');
                 }
             });
 
@@ -1489,22 +1506,8 @@
                 const cells = a.querySelectorAll('td');
                 const bCells = b.querySelectorAll('td');
 
-                // 找到对应列的索引
-                let cellIndex = 1;
-                if (sortKey === 'count') cellIndex = 1;
-                else if (sortKey === 'success') cellIndex = 2;
-                else if (sortKey === 'error') cellIndex = 3;
-                else if (sortKey === 'errorRate') cellIndex = 4;
-                else if (sortKey === 'avgRt') cellIndex = 5;
-                else if (sortKey === 'p95Rt') cellIndex = 6;
-                else if (sortKey === 'p99Rt') cellIndex = 7;
-                else if (sortKey === 'minMax') cellIndex = 8;
-                else if (sortKey === 'latency') cellIndex = 9;
-                else if (sortKey === 'connect') cellIndex = 10;
-                else if (sortKey === 'idle') cellIndex = 11;
-                else if (sortKey === 'threads') cellIndex = 12;
-                else if (sortKey === 'sampleCount') cellIndex = 13;
-                else if (sortKey === 'errorCount') cellIndex = 14;
+                // 由表头顺序动态获取列索引（不再硬编码）
+                const cellIndex = colIndexBySort[sortKey] !== undefined ? colIndexBySort[sortKey] : 1;
 
                 const aValue = parseCellData(cells[cellIndex], sortKey);
                 const bValue = parseCellData(bCells[cellIndex], sortKey);
@@ -1548,12 +1551,19 @@
             detailLinkFilterClear.addEventListener('click', () => setDetailInterface(''));
         }
 
-        // 绑定点击事件
+        // 绑定排序触发：鼠标点击 + 键盘 Enter/Space（可访问性）
         headers.forEach(th => {
             th.addEventListener('click', () => sortTable(th.dataset.sort));
+            th.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                    e.preventDefault();
+                    sortTable(th.dataset.sort);
+                }
+            });
         });
         applyInterfaceFilter();
         applyDetailFilter();
+        });  // DOMContentLoaded
     </script>
 </body>
 </html>

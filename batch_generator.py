@@ -7,9 +7,10 @@ JMeter 报告批量生成器
 用法:
     python batch_generator.py
 """
-import shutil
+import html
 import sys
 import traceback
+import urllib.parse
 from pathlib import Path
 
 from report_generator import generate_report
@@ -94,9 +95,12 @@ def main():
             report_name = jtl_file.stem + "_report.html"
             output_path = OUTPUT_DIR / report_name
 
-            generate_report(data, str(output_path), str(jtl_file))
-            reports.append((jtl_file.name, report_name, len(data.samples)))
-            success_count += 1
+            if generate_report(data, str(output_path), str(jtl_file)):
+                reports.append((jtl_file.name, report_name, len(data.samples)))
+                success_count += 1
+            else:
+                print(f"  跳过：{jtl_file.name}（无有效样本，未生成报告）")
+                error_count += 1
 
         except Exception as e:
             print(f"  错误：{e}")
@@ -301,10 +305,10 @@ def generate_index(reports):
             {''.join([f"""
             <div class="report-item">
                 <div class="report-info">
-                    <div class="report-name">{r[0]}</div>
+                    <div class="report-name">{html.escape(r[0])}</div>
                     <div class="report-meta">{r[2]:,} 条样本</div>
                 </div>
-                <a class="report-link" href="{r[1]}" target="_blank">
+                <a class="report-link" href="{urllib.parse.quote(r[1])}" target="_blank">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
                         <polyline points="15 3 21 3 21 9"/>

@@ -4,9 +4,41 @@ JTL 文件解析器 - 自动检测 CSV/XML 格式
 import csv
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
-from datetime import datetime
 from pathlib import Path
-from typing import List, Optional
+from typing import List
+
+
+# 标准字段名 -> 可接受的列名别名（全部小写；覆盖 JMeter CSV 全名与 XML 短名）
+# 注意：不收录有歧义的裸 'message'，避免 response_message 与 failure_message 互相抢占
+COLUMN_ALIASES = {
+    'timestamp': ['timestamp', 'ts'],
+    'elapsed': ['elapsed', 'elapsedtime', 'elapsed_ms', 'responsetime', 'rt', 't'],
+    'label': ['label', 'name', 'request', 'lb'],
+    'response_code': ['responsecode', 'code', 'status', 'rc'],
+    'response_message': ['responsemessage', 'rm'],
+    'success': ['success', 'issuccess', 's'],
+    'failure_message': ['failuremessage', 'fm'],
+    'thread_name': ['threadname', 'thread', 'tn'],
+    'data_type': ['datatype', 'type', 'dt'],
+    'bytes': ['bytes', 'bodybytes', 'b'],
+    'sent_bytes': ['sentbytes', 'sent', 'sb'],
+    'latency': ['latency', 'latencytime', 'lt'],
+    'connect_time': ['connect', 'connecttime', 'ct'],
+    'idle_time': ['idletime', 'idle', 'it'],
+    'url': ['url', 'requesturl', 'u'],
+    'query_string': ['querystring', 'query', 'qs'],
+    'response_data': ['responsedata', 'response', 'body', 'bd'],
+    'sample_count': ['samplecount', 'sample', 'sc'],
+    'error_count': ['errorcount', 'errors', 'ec'],
+    'all_threads': ['allthreads', 'threads', 'na'],
+    'grp_threads': ['grpthreads', 'ng'],
+}
+
+# 反向查找表：小写别名 -> 标准字段名
+_ALIAS_LOOKUP = {alias: std for std, aliases in COLUMN_ALIASES.items() for alias in aliases}
+
+# 响应体最大保留字符数（防止大响应撑爆内存，CSV/XML 分支统一使用）
+MAX_RESPONSE_CHARS = 50000
 
 
 @dataclass
@@ -77,50 +109,12 @@ def parse_csv(file_path: Path) -> JTLData:
         reader = csv.DictReader(f)
         headers = reader.fieldnames or []
 
-        # 标准化列名映射
+        # 标准化列名映射（首个匹配生效，避免别名冲突）
         col_map = {}
         for h in headers:
-            hl = h.lower().strip()
-            if hl in ['timestamp', 'timeStamp', 'timestamp']:
-                col_map['timestamp'] = h
-            elif hl in ['elapsed', 'elapsedtime', 'elapsed_ms', 'responsetime', 'rt']:
-                col_map['elapsed'] = h
-            elif hl in ['label', 'name', 'request']:
-                col_map['label'] = h
-            elif hl in ['responsecode', 'code', 'status']:
-                col_map['response_code'] = h
-            elif hl in ['responsemessage', 'message']:
-                col_map['response_message'] = h
-            elif hl in ['success', 'issuccess', 's']:
-                col_map['success'] = h
-            elif hl in ['failuremessage', 'message']:
-                col_map['failure_message'] = h
-            elif hl in ['threadname', 'thread']:
-                col_map['thread_name'] = h
-            elif hl in ['datatype', 'type']:
-                col_map['data_type'] = h
-            elif hl in ['bytes', 'bodybytes']:
-                col_map['bytes'] = h
-            elif hl in ['sentbytes', 'sent']:
-                col_map['sent_bytes'] = h
-            elif hl in ['latency', 'latencytime', 'lt']:
-                col_map['latency'] = h
-            elif hl in ['connect', 'connecttime', 'ct']:
-                col_map['connect_time'] = h
-            elif hl in ['idletime', 'idle', 'it']:
-                col_map['idle_time'] = h
-            elif hl in ['url', 'requesturl']:
-                col_map['url'] = h
-            elif hl in ['querystring', 'query']:
-                col_map['query_string'] = h
-            elif hl in ['responsedata', 'response', 'body']:
-                col_map['response_data'] = h
-            elif hl in ['samplecount', 'sample']:
-                col_map['sample_count'] = h
-            elif hl in ['errorcount', 'errors']:
-                col_map['error_count'] = h
-            elif hl in ['allthreads', 'threads']:
-                col_map['all_threads'] = h
+            std = _ALIAS_LOOKUP.get(h.lower().strip())
+            if std and std not in col_map:
+                col_map[std] = h
 
         for row in reader:
             try:
@@ -144,7 +138,7 @@ def parse_csv(file_path: Path) -> JTLData:
                     idle_time=int(row.get(col_map.get('idle_time', 'idleTime'), 0) or 0),
                     url=row.get(col_map.get('url', 'URL'), ''),
                     query_string=row.get(col_map.get('query_string', 'queryString'), ''),
-                    response_data=row.get(col_map.get('response_data', 'responseData'), ''),
+                    response_data=(row.get(col_map.get('response_data', 'responseData'), '') or '')[:MAX_RESPONSE_CHARS],
                     sample_count=int(row.get(col_map.get('sample_count', 'sampleCount'), 0) or 0),
                     error_count=int(row.get(col_map.get('error_count', 'errorCount'), 0) or 0),
                     all_threads=int(row.get(col_map.get('all_threads', 'allThreads'), 0) or 0),
@@ -222,7 +216,7 @@ def parse_xml(file_path: Path) -> JTLData:
                     idle_time=int(elem.get('it', '0') or '0'),
                     url=url,
                     query_string=query_string,
-                    response_data=response_data[:50000] if response_data else '',  # 保留最多 50KB 响应数据
+                    response_data=response_data[:MAX_RESPONSE_CHARS] if response_data else '',  # 保留最多 MAX_RESPONSE_CHARS 响应数据
                     sample_count=int(elem.get('sc', '0') or '0'),
                     error_count=int(elem.get('ec', '0') or '0'),
                     all_threads=int(elem.get('na', '0') or '0'),
