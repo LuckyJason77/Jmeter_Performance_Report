@@ -130,7 +130,7 @@ def generate_index(reports):
     """生成索引页面"""
     from datetime import datetime
 
-    html = f"""<!DOCTYPE html>
+    index_html = f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -330,7 +330,7 @@ def generate_index(reports):
 
     index_path = OUTPUT_DIR / "index.html"
     with open(index_path, 'w', encoding='utf-8') as f:
-        f.write(html)
+        f.write(index_html)
     print(f"已生成索引页面：{index_path}")
 
 
